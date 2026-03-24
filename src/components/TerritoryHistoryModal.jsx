@@ -39,7 +39,6 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
     setLoadingHistory(false)
   }
 
-  const openEntry = history.find(h => !h.return_date)
   const isAvailable = territory.status === 'available'
   const territoryTitle = territory.name
     ? `${territory.name} ${territory.number}`
@@ -49,6 +48,34 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
     e.preventDefault()
     if (!assignForm.person_name.trim()) { setError('Nome obrigatório.'); return }
     if (!assignForm.assigned_date) { setError('Data de designação obrigatória.'); return }
+    setSaving(true)
+    setError(null)
+    try {
+      const { data: updated } = await supabase
+        .from('territories')
+        .update({
+          status: 'assigned',
+          assigned_to: assignForm.person_name,
+          assigned_date: assignForm.assigned_date,
+          return_date: null,
+        })
+        .eq('id', territory.id)
+        .select()
+        .single()
+
+      onUpdated(updated)
+      setShowAssignForm(false)
+      setAssignForm({ person_name: '', assigned_date: '' })
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleDeliver(e) {
+    e.preventDefault()
+    if (!returnDate) { setError('Data de entrega obrigatória.'); return }
     setSaving(true)
     setError(null)
     try {
@@ -71,44 +98,10 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
 
       await supabase.from('territory_history').insert({
         territory_id: territory.id,
-        person_name: assignForm.person_name,
-        assigned_date: assignForm.assigned_date,
+        person_name: territory.assigned_to,
+        assigned_date: territory.assigned_date,
+        return_date: returnDate,
       })
-
-      const { data: updated } = await supabase
-        .from('territories')
-        .update({
-          status: 'assigned',
-          assigned_to: assignForm.person_name,
-          assigned_date: assignForm.assigned_date,
-          return_date: null,
-        })
-        .eq('id', territory.id)
-        .select()
-        .single()
-
-      onUpdated(updated)
-      setShowAssignForm(false)
-      setAssignForm({ person_name: '', assigned_date: '' })
-      fetchHistory()
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  async function handleReturn(e) {
-    e.preventDefault()
-    if (!returnDate) { setError('Data de devolução obrigatória.'); return }
-    if (!openEntry) return
-    setSaving(true)
-    setError(null)
-    try {
-      await supabase
-        .from('territory_history')
-        .update({ return_date: returnDate })
-        .eq('id', openEntry.id)
 
       const { data: updated } = await supabase
         .from('territories')
@@ -126,6 +119,11 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
     } finally {
       setSaving(false)
     }
+  }
+
+  async function handleDeleteEntry(id) {
+    await supabase.from('territory_history').delete().eq('id', id)
+    fetchHistory()
   }
 
   async function downloadBoth() {
@@ -369,14 +367,16 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
                       <p className="font-medium text-gray-800">{entry.person_name}</p>
                       <p className="text-xs text-gray-500 mt-0.5">
                         Recebeu: {formatDate(entry.assigned_date)}
-                        {entry.return_date && ` · Devolveu: ${formatDate(entry.return_date)}`}
+                        {entry.return_date && ` · Entregou: ${formatDate(entry.return_date)}`}
                       </p>
                     </div>
-                    {!entry.return_date && (
-                      <span className="shrink-0 ml-2 text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
-                        Em posse
-                      </span>
-                    )}
+                    <button
+                      onClick={() => handleDeleteEntry(entry.id)}
+                      className="shrink-0 ml-2 text-gray-300 hover:text-red-400 transition-colors text-base leading-none mt-0.5"
+                      title="Remover"
+                    >
+                      ×
+                    </button>
                   </div>
                 ))}
               </div>
@@ -425,19 +425,19 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
             </form>
           )}
 
-          {/* Return form */}
-          {showReturnForm && openEntry && (
-            <form onSubmit={handleReturn} className="border border-green-100 bg-green-50 rounded-xl p-4 space-y-3">
+          {/* Deliver form */}
+          {showReturnForm && (
+            <form onSubmit={handleDeliver} className="border border-red-100 bg-red-50 rounded-xl p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-800">
-                Registrar devolução — {openEntry.person_name}
+                Entregar — {territory.assigned_to}
               </h3>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Data de devolução</label>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Data de entrega</label>
                 <input
                   type="date"
                   value={returnDate}
                   onChange={e => setReturnDate(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                  className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
                 />
               </div>
               <div className="flex justify-end gap-2">
@@ -451,9 +451,9 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
                 <button
                   type="submit"
                   disabled={saving}
-                  className="text-sm px-3 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
+                  className="text-sm px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
                 >
-                  {saving ? 'Salvando...' : 'Confirmar devolução'}
+                  {saving ? 'Salvando...' : 'Confirmar entrega'}
                 </button>
               </div>
             </form>
@@ -473,7 +473,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
             </button>
           )}
           <div className="flex gap-2 flex-1 justify-end">
-            {!openEntry && !showAssignForm && (
+            {isAvailable && !showAssignForm && (
               <button
                 onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
                 className="text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
@@ -481,12 +481,12 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
                 Atribuir
               </button>
             )}
-            {openEntry && !showReturnForm && (
+            {!isAvailable && !showReturnForm && (
               <button
                 onClick={() => { setShowReturnForm(true); setShowAssignForm(false); setError(null) }}
-                className="text-sm px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors font-medium"
+                className="text-sm px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium"
               >
-                Registrar devolução
+                Entregar
               </button>
             )}
           </div>
