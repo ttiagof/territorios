@@ -96,12 +96,13 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
         await supabase.from('territory_history').delete().eq('id', oldest.id)
       }
 
-      await supabase.from('territory_history').insert({
+      const { error: insertError } = await supabase.from('territory_history').insert({
         territory_id: territory.id,
         person_name: territory.assigned_to,
         assigned_date: territory.assigned_date,
         return_date: returnDate,
       })
+      if (insertError) throw insertError
 
       const { data: updated } = await supabase
         .from('territories')
