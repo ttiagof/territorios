@@ -8,7 +8,7 @@ const STATUS_FILTERS = [
   { value: 'assigned', label: 'Designados' },
 ]
 
-export default function TerritoryGrid({ territories, setTerritories }) {
+export default function TerritoryGrid({ territories, setTerritories, onSignOut }) {
   const [selected, setSelected] = useState(null)
   const [showAdd, setShowAdd] = useState(false)
   const [search, setSearch] = useState('')
@@ -72,12 +72,20 @@ export default function TerritoryGrid({ territories, setTerritories }) {
             ))}
           </div>
         </div>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="shrink-0 bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-full shadow-sm hover:bg-blue-700 active:scale-95 transition-all"
-        >
-          + Adicionar
-        </button>
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowAdd(true)}
+            className="bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-full shadow-sm hover:bg-blue-700 active:scale-95 transition-all"
+          >
+            + Adicionar
+          </button>
+          <button
+            onClick={onSignOut}
+            className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            Sair
+          </button>
+        </div>
       </div>
 
       {/* Grid */}

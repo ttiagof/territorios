@@ -14,7 +14,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
   const [backImageFile, setBackImageFile] = useState(null)
   const [frontPreview, setFrontPreview] = useState(territory.card_front_image_url ?? null)
   const [backPreview, setBackPreview] = useState(territory.card_back_image_url ?? null)
-  const [activeCard, setActiveCard] = useState('front')
+  const [lightboxSrc, setLightboxSrc] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -128,6 +128,23 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
     }
   }
 
+  async function downloadBoth() {
+    async function dl(url, filename) {
+      const res = await fetch(url)
+      const blob = await res.blob()
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      a.download = filename
+      a.click()
+      URL.revokeObjectURL(a.href)
+    }
+    if (frontPreview) await dl(frontPreview, `${territoryTitle}-frente.jpg`)
+    if (backPreview) {
+      await new Promise(r => setTimeout(r, 300))
+      await dl(backPreview, `${territoryTitle}-verso.jpg`)
+    }
+  }
+
   async function handleSaveEdit() {
     setSaving(true)
     setError(null)
@@ -179,6 +196,27 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
   }
 
   return (
+    <>
+    {/* Lightbox */}
+    {lightboxSrc && (
+      <div
+        className="fixed inset-0 z-[60] bg-black/90 flex items-center justify-center p-4"
+        onClick={() => setLightboxSrc(null)}
+      >
+        <button
+          onClick={() => setLightboxSrc(null)}
+          className="absolute top-4 right-6 text-white text-2xl leading-none hover:text-gray-300"
+        >
+          ✕
+        </button>
+        <img
+          src={lightboxSrc}
+          alt="Cartão ampliado"
+          className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl"
+          onClick={e => e.stopPropagation()}
+        />
+      </div>
+    )}
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={onClose}
@@ -200,37 +238,26 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
         </div>
 
         <div className="px-6 py-4 space-y-5">
-          {/* Card image preview */}
-          <div>
-            <div className="flex gap-2 mb-2">
-              <button
-                onClick={() => setActiveCard('front')}
-                className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${
-                  activeCard === 'front' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Frente
-              </button>
-              <button
-                onClick={() => setActiveCard('back')}
-                className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${
-                  activeCard === 'back' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Verso
-              </button>
-            </div>
-            <div className="rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
-              {(activeCard === 'front' ? frontPreview : backPreview) ? (
-                <img
-                  src={activeCard === 'front' ? frontPreview : backPreview}
-                  alt={territoryTitle}
-                  className="w-full object-contain max-h-56"
-                />
-              ) : (
-                <div className="h-36 flex items-center justify-center text-gray-400 text-sm">Sem imagem</div>
-              )}
-            </div>
+          {/* Card images — side by side */}
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { src: frontPreview, label: 'Frente' },
+              { src: backPreview, label: 'Verso' },
+            ].map(({ src, label }) => (
+              <div key={label}>
+                <div
+                  onClick={() => src && setLightboxSrc(src)}
+                  className={`rounded-xl overflow-hidden bg-gray-100 border border-gray-200 ${src ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''}`}
+                >
+                  {src ? (
+                    <img src={src} alt={`${territoryTitle} — ${label}`} className="w-full object-cover aspect-[4/3]" />
+                  ) : (
+                    <div className="aspect-[4/3] flex items-center justify-center text-gray-400 text-xs">Sem imagem</div>
+                  )}
+                </div>
+                <p className="text-center text-xs text-gray-500 mt-1 font-medium">{label}</p>
+              </div>
+            ))}
           </div>
 
           {/* Edit territory toggle */}
@@ -427,25 +454,36 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
 
         {/* Footer actions */}
         <div className="px-6 pb-6 flex gap-2 border-t border-gray-100 pt-4">
-          {!openEntry && !showAssignForm && (
+          {(frontPreview || backPreview) && (
             <button
-              onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
-              className="flex-1 text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
+              onClick={downloadBoth}
+              className="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-1.5"
             >
-              Atribuir
+              ⬇ Baixar cartões
             </button>
           )}
-          {openEntry && !showReturnForm && (
-            <button
-              onClick={() => { setShowReturnForm(true); setShowAssignForm(false); setError(null) }}
-              className="flex-1 text-sm px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors font-medium"
-            >
-              Registrar devolução
-            </button>
-          )}
+          <div className="flex gap-2 flex-1 justify-end">
+            {!openEntry && !showAssignForm && (
+              <button
+                onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
+                className="text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
+              >
+                Atribuir
+              </button>
+            )}
+            {openEntry && !showReturnForm && (
+              <button
+                onClick={() => { setShowReturnForm(true); setShowAssignForm(false); setError(null) }}
+                className="text-sm px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors font-medium"
+              >
+                Registrar devolução
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
+    </>
   )
 }
 

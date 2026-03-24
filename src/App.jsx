@@ -48,14 +48,10 @@ export default function App() {
   }
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => supabase.auth.signOut()}
-        className="absolute top-4 right-6 text-xs text-gray-400 hover:text-gray-600 z-10"
-      >
-        Sair
-      </button>
-      <TerritoryGrid territories={territories} setTerritories={setTerritories} />
-    </div>
+    <TerritoryGrid
+      territories={territories}
+      setTerritories={setTerritories}
+      onSignOut={() => supabase.auth.signOut()}
+    />
   )
 }
