@@ -108,39 +108,42 @@ export default function TerritoryGrid({ territories, setTerritories }) {
 
 function TerritoryCard({ territory, onClick }) {
   const isAvailable = territory.status === 'available'
-  const label = territory.name
-    ? `${territory.name} ${territory.number}`
-    : territory.number
+  const name = territory.name ?? ''
+  const number = territory.number ?? ''
 
   return (
     <button
       onClick={onClick}
-      className="group relative aspect-square rounded-xl overflow-hidden border border-gray-200 bg-gray-100 shadow-sm hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="flex flex-col rounded-2xl overflow-hidden bg-gray-200 shadow-sm hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-blue-500 text-left"
     >
-      {territory.card_front_image_url ? (
-        <img
-          src={territory.card_front_image_url}
-          alt={label}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <span className="text-gray-300 text-4xl select-none">🗺</span>
-        </div>
-      )}
-
-      {/* Bottom gradient + label */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 p-2">
-        <p className="text-white text-xs font-semibold leading-tight truncate">{label}</p>
+      {/* Image area */}
+      <div className="w-full aspect-[4/3] bg-[repeating-conic-gradient(#ccc_0%_25%,#e5e5e5_0%_50%)] bg-[length:16px_16px] overflow-hidden">
+        {territory.card_front_image_url && (
+          <img
+            src={territory.card_front_image_url}
+            alt={`${name} ${number}`}
+            className="w-full h-full object-cover"
+          />
+        )}
       </div>
 
-      {/* Status dot */}
-      <div
-        className={`absolute top-2 right-2 w-3 h-3 rounded-full border-2 border-white shadow ${
-          isAvailable ? 'bg-green-500' : 'bg-red-500'
-        }`}
-      />
+      {/* Info bar */}
+      <div className="px-3 py-2.5 bg-gray-200">
+        <div className="flex items-center justify-between gap-1">
+          <p className="text-xs font-semibold text-gray-700 truncate">
+            {name && <span>{name} </span>}
+            <span>{number}</span>
+          </p>
+          <span
+            className={`shrink-0 w-2 h-2 rounded-full ${isAvailable ? 'bg-green-500' : 'bg-red-500'}`}
+          />
+        </div>
+        {/* Decorative lines mimicking text */}
+        <div className="mt-1.5 space-y-1">
+          <div className="h-1.5 rounded-full bg-gray-300 w-full" />
+          <div className="h-1.5 rounded-full bg-gray-300 w-4/5" />
+        </div>
+      </div>
     </button>
   )
 }
