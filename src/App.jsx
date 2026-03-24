@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import LoginPage from './components/LoginPage'
-import TerritoryTable from './components/TerritoryTable'
+import TerritoryGrid from './components/TerritoryGrid'
 
 export default function App() {
   const [session, setSession] = useState(undefined) // undefined = loading
@@ -55,7 +55,7 @@ export default function App() {
       >
         Sair
       </button>
-      <TerritoryTable territories={territories} setTerritories={setTerritories} />
+      <TerritoryGrid territories={territories} setTerritories={setTerritories} />
     </div>
   )
 }

@@ -1,22 +1,14 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-const STATUS_OPTIONS = [
-  { value: 'available', label: 'Disponível' },
-  { value: 'assigned', label: 'Designado' },
-  { value: 'completed', label: 'Concluído' },
-]
-
 export default function AddTerritoryForm({ onClose, onAdded }) {
   const [form, setForm] = useState({
+    name: '',
     number: '',
-    assigned_to: '',
-    assigned_date: '',
-    return_date: '',
-    status: 'available',
     notes: '',
   })
-  const [imageFile, setImageFile] = useState(null)
+  const [frontImageFile, setFrontImageFile] = useState(null)
+  const [backImageFile, setBackImageFile] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -31,29 +23,42 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
     setError(null)
 
     try {
-      // Insert territory first to get the ID
       const { data, error: insertError } = await supabase
         .from('territories')
-        .insert([{ ...form }])
+        .insert([{ name: form.name, number: form.number, notes: form.notes, status: 'available' }])
         .select()
         .single()
       if (insertError) throw insertError
 
-      let card_image_url = null
-      if (imageFile) {
-        const ext = imageFile.name.split('.').pop()
-        const path = `${data.id}.${ext}`
+      let updates = {}
+
+      if (frontImageFile) {
+        const ext = frontImageFile.name.split('.').pop()
+        const path = `${data.id}-front.${ext}`
         const { error: uploadError } = await supabase.storage
           .from('territory-cards')
-          .upload(path, imageFile, { upsert: true })
+          .upload(path, frontImageFile, { upsert: true })
         if (uploadError) throw uploadError
         const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
-        card_image_url = urlData.publicUrl
-
-        await supabase.from('territories').update({ card_image_url }).eq('id', data.id)
+        updates.card_front_image_url = urlData.publicUrl
       }
 
-      onAdded({ ...data, card_image_url })
+      if (backImageFile) {
+        const ext = backImageFile.name.split('.').pop()
+        const path = `${data.id}-back.${ext}`
+        const { error: uploadError } = await supabase.storage
+          .from('territory-cards')
+          .upload(path, backImageFile, { upsert: true })
+        if (uploadError) throw uploadError
+        const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
+        updates.card_back_image_url = urlData.publicUrl
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await supabase.from('territories').update(updates).eq('id', data.id)
+      }
+
+      onAdded({ ...data, ...updates })
     } catch (err) {
       setError(err.message)
     } finally {
@@ -74,33 +79,56 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
 
         <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <FormField label="Número *" name="number" value={form.number} onChange={handleField} />
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
-              <select name="status" value={form.status} onChange={handleField} className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm">
-                {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-            </div>
-            <FormField label="Designado a" name="assigned_to" value={form.assigned_to} onChange={handleField} />
-            <FormField label="Data de designação" name="assigned_date" type="date" value={form.assigned_date} onChange={handleField} />
-            <FormField label="Data de devolução" name="return_date" type="date" value={form.return_date} onChange={handleField} />
+            <FormField label="Nome" name="name" value={form.name} onChange={handleField} placeholder="Ex: Rodeio" />
+            <FormField label="Número *" name="number" value={form.number} onChange={handleField} placeholder="Ex: 36" />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Imagem do cartão</label>
-            <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files[0])} className="text-sm text-gray-600" />
+            <label className="block text-xs font-medium text-gray-600 mb-1">Imagem da frente</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => setFrontImageFile(e.target.files[0] ?? null)}
+              className="text-sm text-gray-600"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Imagem do verso</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => setBackImageFile(e.target.files[0] ?? null)}
+              className="text-sm text-gray-600"
+            />
           </div>
 
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">Observações</label>
-            <textarea name="notes" value={form.notes} onChange={handleField} rows={3} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <textarea
+              name="notes"
+              value={form.notes}
+              onChange={handleField}
+              rows={3}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
 
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="text-sm px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={saving} className="text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors">
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-sm px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
               {saving ? 'Salvando...' : 'Adicionar'}
             </button>
           </div>
@@ -110,11 +138,18 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
   )
 }
 
-function FormField({ label, name, value, onChange, type = 'text' }) {
+function FormField({ label, name, value, onChange, type = 'text', placeholder = '' }) {
   return (
     <div>
       <label className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
-      <input type={type} name={name} value={value} onChange={onChange} className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
     </div>
   )
 }

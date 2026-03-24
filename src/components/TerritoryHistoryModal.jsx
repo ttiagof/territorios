@@ -1,0 +1,456 @@
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
+
+export default function TerritoryHistoryModal({ territory, onClose, onUpdated }) {
+  const [history, setHistory] = useState([])
+  const [loadingHistory, setLoadingHistory] = useState(true)
+  const [showAssignForm, setShowAssignForm] = useState(false)
+  const [showReturnForm, setShowReturnForm] = useState(false)
+  const [showEditForm, setShowEditForm] = useState(false)
+  const [assignForm, setAssignForm] = useState({ person_name: '', assigned_date: '' })
+  const [returnDate, setReturnDate] = useState('')
+  const [editForm, setEditForm] = useState({ name: territory.name ?? '', number: territory.number ?? '', notes: territory.notes ?? '' })
+  const [frontImageFile, setFrontImageFile] = useState(null)
+  const [backImageFile, setBackImageFile] = useState(null)
+  const [frontPreview, setFrontPreview] = useState(territory.card_front_image_url ?? null)
+  const [backPreview, setBackPreview] = useState(territory.card_back_image_url ?? null)
+  const [activeCard, setActiveCard] = useState('front')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    fetchHistory()
+  }, [territory.id])
+
+  // Sync previews if territory prop updates (e.g. after saving edit)
+  useEffect(() => {
+    if (!frontImageFile) setFrontPreview(territory.card_front_image_url ?? null)
+    if (!backImageFile) setBackPreview(territory.card_back_image_url ?? null)
+  }, [territory.card_front_image_url, territory.card_back_image_url])
+
+  async function fetchHistory() {
+    setLoadingHistory(true)
+    const { data } = await supabase
+      .from('territory_history')
+      .select('*')
+      .eq('territory_id', territory.id)
+      .order('created_at', { ascending: false })
+    setHistory(data ?? [])
+    setLoadingHistory(false)
+  }
+
+  const openEntry = history.find(h => !h.return_date)
+  const isAvailable = territory.status === 'available'
+  const territoryTitle = territory.name
+    ? `${territory.name} ${territory.number}`
+    : territory.number
+
+  async function handleAssign(e) {
+    e.preventDefault()
+    if (!assignForm.person_name.trim()) { setError('Nome obrigatório.'); return }
+    if (!assignForm.assigned_date) { setError('Data de designação obrigatória.'); return }
+    setSaving(true)
+    setError(null)
+    try {
+      // Rolling cap: max 50 entries
+      const { count } = await supabase
+        .from('territory_history')
+        .select('*', { count: 'exact', head: true })
+        .eq('territory_id', territory.id)
+
+      if (count >= 50) {
+        const { data: oldest } = await supabase
+          .from('territory_history')
+          .select('id')
+          .eq('territory_id', territory.id)
+          .order('created_at', { ascending: true })
+          .limit(1)
+          .single()
+        await supabase.from('territory_history').delete().eq('id', oldest.id)
+      }
+
+      await supabase.from('territory_history').insert({
+        territory_id: territory.id,
+        person_name: assignForm.person_name,
+        assigned_date: assignForm.assigned_date,
+      })
+
+      const { data: updated } = await supabase
+        .from('territories')
+        .update({
+          status: 'assigned',
+          assigned_to: assignForm.person_name,
+          assigned_date: assignForm.assigned_date,
+          return_date: null,
+        })
+        .eq('id', territory.id)
+        .select()
+        .single()
+
+      onUpdated(updated)
+      setShowAssignForm(false)
+      setAssignForm({ person_name: '', assigned_date: '' })
+      fetchHistory()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleReturn(e) {
+    e.preventDefault()
+    if (!returnDate) { setError('Data de devolução obrigatória.'); return }
+    if (!openEntry) return
+    setSaving(true)
+    setError(null)
+    try {
+      await supabase
+        .from('territory_history')
+        .update({ return_date: returnDate })
+        .eq('id', openEntry.id)
+
+      const { data: updated } = await supabase
+        .from('territories')
+        .update({ status: 'available', return_date: returnDate })
+        .eq('id', territory.id)
+        .select()
+        .single()
+
+      onUpdated(updated)
+      setShowReturnForm(false)
+      setReturnDate('')
+      fetchHistory()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleSaveEdit() {
+    setSaving(true)
+    setError(null)
+    try {
+      const updates = {
+        name: editForm.name,
+        number: editForm.number,
+        notes: editForm.notes,
+      }
+
+      if (frontImageFile) {
+        const ext = frontImageFile.name.split('.').pop()
+        const path = `${territory.id}-front.${ext}`
+        const { error: uploadError } = await supabase.storage
+          .from('territory-cards')
+          .upload(path, frontImageFile, { upsert: true })
+        if (uploadError) throw uploadError
+        const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
+        updates.card_front_image_url = urlData.publicUrl
+      }
+
+      if (backImageFile) {
+        const ext = backImageFile.name.split('.').pop()
+        const path = `${territory.id}-back.${ext}`
+        const { error: uploadError } = await supabase.storage
+          .from('territory-cards')
+          .upload(path, backImageFile, { upsert: true })
+        if (uploadError) throw uploadError
+        const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
+        updates.card_back_image_url = urlData.publicUrl
+      }
+
+      const { data: updated } = await supabase
+        .from('territories')
+        .update(updates)
+        .eq('id', territory.id)
+        .select()
+        .single()
+
+      onUpdated(updated)
+      setShowEditForm(false)
+      setFrontImageFile(null)
+      setBackImageFile(null)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-semibold text-gray-900">{territoryTitle}</span>
+            <span className={`w-2.5 h-2.5 rounded-full ${isAvailable ? 'bg-green-500' : 'bg-red-500'}`} />
+            <span className={`text-xs font-medium ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
+              {isAvailable ? 'Disponível' : 'Designado'}
+            </span>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+        </div>
+
+        <div className="px-6 py-4 space-y-5">
+          {/* Card image preview */}
+          <div>
+            <div className="flex gap-2 mb-2">
+              <button
+                onClick={() => setActiveCard('front')}
+                className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${
+                  activeCard === 'front' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                Frente
+              </button>
+              <button
+                onClick={() => setActiveCard('back')}
+                className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${
+                  activeCard === 'back' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                Verso
+              </button>
+            </div>
+            <div className="rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+              {(activeCard === 'front' ? frontPreview : backPreview) ? (
+                <img
+                  src={activeCard === 'front' ? frontPreview : backPreview}
+                  alt={territoryTitle}
+                  className="w-full object-contain max-h-56"
+                />
+              ) : (
+                <div className="h-36 flex items-center justify-center text-gray-400 text-sm">Sem imagem</div>
+              )}
+            </div>
+          </div>
+
+          {/* Edit territory toggle */}
+          {showEditForm ? (
+            <div className="border border-gray-200 rounded-xl p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-800">Editar território</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Nome</label>
+                  <input
+                    value={editForm.name}
+                    onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
+                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Número</label>
+                  <input
+                    value={editForm.number}
+                    onChange={e => setEditForm(f => ({ ...f, number: e.target.value }))}
+                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Imagem da frente</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {
+                    const file = e.target.files[0]
+                    if (!file) return
+                    setFrontImageFile(file)
+                    setFrontPreview(URL.createObjectURL(file))
+                  }}
+                  className="text-sm text-gray-600"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Imagem do verso</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {
+                    const file = e.target.files[0]
+                    if (!file) return
+                    setBackImageFile(file)
+                    setBackPreview(URL.createObjectURL(file))
+                  }}
+                  className="text-sm text-gray-600"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Observações</label>
+                <textarea
+                  value={editForm.notes}
+                  onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
+                  rows={2}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => { setShowEditForm(false); setFrontImageFile(null); setBackImageFile(null) }}
+                  className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSaveEdit}
+                  disabled={saving}
+                  className="text-sm px-3 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                >
+                  {saving ? 'Salvando...' : 'Salvar'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowEditForm(true)}
+              className="text-xs text-gray-400 hover:text-gray-600 underline"
+            >
+              Editar território
+            </button>
+          )}
+
+          {/* History */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-800 mb-3">Histórico</h3>
+            {loadingHistory ? (
+              <p className="text-sm text-gray-400">Carregando...</p>
+            ) : history.length === 0 ? (
+              <p className="text-sm text-gray-400 italic">Nenhum registro ainda.</p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                {history.map(entry => (
+                  <div key={entry.id} className="flex items-start justify-between text-sm bg-gray-50 rounded-lg px-3 py-2">
+                    <div>
+                      <p className="font-medium text-gray-800">{entry.person_name}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        Recebeu: {formatDate(entry.assigned_date)}
+                        {entry.return_date && ` · Devolveu: ${formatDate(entry.return_date)}`}
+                      </p>
+                    </div>
+                    {!entry.return_date && (
+                      <span className="shrink-0 ml-2 text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+                        Em posse
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Assign form */}
+          {showAssignForm && (
+            <form onSubmit={handleAssign} className="border border-blue-100 bg-blue-50 rounded-xl p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-800">Atribuir território</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Nome da pessoa</label>
+                  <input
+                    value={assignForm.person_name}
+                    onChange={e => setAssignForm(f => ({ ...f, person_name: e.target.value }))}
+                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Data de designação</label>
+                  <input
+                    type="date"
+                    value={assignForm.assigned_date}
+                    onChange={e => setAssignForm(f => ({ ...f, assigned_date: e.target.value }))}
+                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setShowAssignForm(false); setError(null) }}
+                  className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="text-sm px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                >
+                  {saving ? 'Salvando...' : 'Confirmar'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Return form */}
+          {showReturnForm && openEntry && (
+            <form onSubmit={handleReturn} className="border border-green-100 bg-green-50 rounded-xl p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-800">
+                Registrar devolução — {openEntry.person_name}
+              </h3>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Data de devolução</label>
+                <input
+                  type="date"
+                  value={returnDate}
+                  onChange={e => setReturnDate(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setShowReturnForm(false); setError(null) }}
+                  className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="text-sm px-3 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
+                >
+                  {saving ? 'Salvando...' : 'Confirmar devolução'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
+        </div>
+
+        {/* Footer actions */}
+        <div className="px-6 pb-6 flex gap-2 border-t border-gray-100 pt-4">
+          {!openEntry && !showAssignForm && (
+            <button
+              onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
+              className="flex-1 text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
+            >
+              Atribuir
+            </button>
+          )}
+          {openEntry && !showReturnForm && (
+            <button
+              onClick={() => { setShowReturnForm(true); setShowAssignForm(false); setError(null) }}
+              className="flex-1 text-sm px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors font-medium"
+            >
+              Registrar devolução
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function formatDate(val) {
+  if (!val) return '—'
+  const [y, m, d] = val.split('-')
+  return `${d}/${m}/${y}`
+}
