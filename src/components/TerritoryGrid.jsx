@@ -158,18 +158,34 @@ function TerritoryCard({ territory, onClick }) {
       </div>
 
       {/* Info bar */}
-      <div className="px-3 py-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
-        <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
-        <span
-          className={`shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-            isAvailable
-              ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-600'
-          }`}
-        >
-          {isAvailable ? 'Livre' : 'Ocupado'}
-        </span>
+      <div className="px-3 py-2.5 border-t border-gray-100">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
+          <span
+            className={`shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+              isAvailable
+                ? 'bg-green-100 text-green-700'
+                : 'bg-red-100 text-red-600'
+            }`}
+          >
+            {isAvailable ? 'Livre' : 'Ocupado'}
+          </span>
+        </div>
+        {!isAvailable && territory.assigned_to && (
+          <div className="mt-1">
+            <p className="text-xs text-gray-600 truncate font-medium">{territory.assigned_to}</p>
+            {territory.assigned_date && (
+              <p className="text-[10px] text-gray-400">desde {formatDate(territory.assigned_date)}</p>
+            )}
+          </div>
+        )}
       </div>
     </button>
   )
+}
+
+function formatDate(val) {
+  if (!val) return ''
+  const [y, m, d] = val.split('-')
+  return `${d}/${m}/${y}`
 }

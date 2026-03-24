@@ -227,12 +227,22 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold text-gray-900">{territoryTitle}</span>
-            <span className={`w-2.5 h-2.5 rounded-full ${isAvailable ? 'bg-green-500' : 'bg-red-500'}`} />
-            <span className={`text-xs font-medium ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
-              {isAvailable ? 'Disponível' : 'Designado'}
-            </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-semibold text-gray-900">{territoryTitle}</span>
+              <span className={`w-2.5 h-2.5 rounded-full ${isAvailable ? 'bg-green-500' : 'bg-red-500'}`} />
+              <span className={`text-xs font-medium ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
+                {isAvailable ? 'Disponível' : 'Designado'}
+              </span>
+            </div>
+            {!isAvailable && territory.assigned_to && (
+              <p className="text-sm text-gray-500 mt-0.5">
+                Com <span className="font-medium text-gray-700">{territory.assigned_to}</span>
+                {territory.assigned_date && (
+                  <span className="text-gray-400"> · desde {formatDate(territory.assigned_date)}</span>
+                )}
+              </p>
+            )}
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
         </div>
