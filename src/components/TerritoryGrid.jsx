@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import TerritoryHistoryModal from './TerritoryHistoryModal'
 import AddTerritoryForm from './AddTerritoryForm'
+import { formatDate } from '../lib/utils'
 
 const STATUS_FILTERS = [
   { value: '', label: 'Todos' },
@@ -8,7 +9,7 @@ const STATUS_FILTERS = [
   { value: 'assigned', label: 'Designados' },
 ]
 
-export default function TerritoryGrid({ territories, setTerritories, onSignOut }) {
+export default function TerritoryGrid({ territories, setTerritories, loading, onSignOut }) {
   const [selected, setSelected] = useState(null)
   const [showAdd, setShowAdd] = useState(false)
   const [search, setSearch] = useState('')
@@ -103,7 +104,19 @@ export default function TerritoryGrid({ territories, setTerritories, onSignOut }
         </div>
 
         {/* Grid */}
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="rounded-3xl overflow-hidden bg-white animate-pulse">
+                <div className="w-full aspect-[5/3] bg-gray-200" />
+                <div className="px-3 py-2.5 space-y-2">
+                  <div className="h-3 bg-gray-200 rounded w-2/3" />
+                  <div className="h-2.5 bg-gray-100 rounded w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-3 text-center">
             <div className="w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center">
               <svg className="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -198,8 +211,3 @@ function TerritoryCard({ territory, onClick }) {
   )
 }
 
-function formatDate(val) {
-  if (!val) return ''
-  const [y, m, d] = val.split('-')
-  return `${d}/${m}/${y}`
-}

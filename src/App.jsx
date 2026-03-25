@@ -7,6 +7,7 @@ export default function App() {
   const [session, setSession] = useState(undefined) // undefined = loading
   const [territories, setTerritories] = useState([])
   const [loadingData, setLoadingData] = useState(false)
+  const [fetchError, setFetchError] = useState(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setSession(session))
@@ -19,12 +20,14 @@ export default function App() {
   useEffect(() => {
     if (!session) return
     setLoadingData(true)
+    setFetchError(null)
     supabase
       .from('territories')
       .select('*')
       .order('number', { ascending: true })
       .then(({ data, error }) => {
-        if (!error) setTerritories(data ?? [])
+        if (error) setFetchError(error.message)
+        else setTerritories(data ?? [])
         setLoadingData(false)
       })
   }, [session])
@@ -39,10 +42,19 @@ export default function App() {
 
   if (!session) return <LoginPage />
 
-  if (loadingData) {
+  if (fetchError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-gray-400 text-sm">Carregando territórios...</div>
+        <div className="text-center space-y-2">
+          <p className="text-gray-700 font-medium">Erro ao carregar territórios</p>
+          <p className="text-sm text-gray-400">{fetchError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-3 text-sm px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-700"
+          >
+            Tentar novamente
+          </button>
+        </div>
       </div>
     )
   }
@@ -51,6 +63,7 @@ export default function App() {
     <TerritoryGrid
       territories={territories}
       setTerritories={setTerritories}
+      loading={loadingData}
       onSignOut={() => supabase.auth.signOut()}
     />
   )

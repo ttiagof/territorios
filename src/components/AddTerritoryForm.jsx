@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { compressImage } from '../lib/imageUtils'
+import ImageDropZone from './ImageDropZone'
 
 export default function AddTerritoryForm({ onClose, onAdded }) {
   const [form, setForm] = useState({
@@ -10,6 +11,8 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
   })
   const [frontImageFile, setFrontImageFile] = useState(null)
   const [backImageFile, setBackImageFile] = useState(null)
+  const [frontPreview, setFrontPreview] = useState(null)
+  const [backPreview, setBackPreview] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -86,21 +89,19 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
 
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">Imagem da frente</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={e => setFrontImageFile(e.target.files[0] ?? null)}
-              className="text-sm text-gray-600"
+            <ImageDropZone
+              preview={frontPreview}
+              onFile={file => { setFrontImageFile(file); setFrontPreview(URL.createObjectURL(file)) }}
+              onClear={() => { setFrontImageFile(null); setFrontPreview(null) }}
             />
           </div>
 
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">Imagem do verso</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={e => setBackImageFile(e.target.files[0] ?? null)}
-              className="text-sm text-gray-600"
+            <ImageDropZone
+              preview={backPreview}
+              onFile={file => { setBackImageFile(file); setBackPreview(URL.createObjectURL(file)) }}
+              onClear={() => { setBackImageFile(null); setBackPreview(null) }}
             />
           </div>
 

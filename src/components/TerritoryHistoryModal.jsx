@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+
 import { supabase } from '../lib/supabase'
 import { compressImage } from '../lib/imageUtils'
+import { formatDate } from '../lib/utils'
+import ImageDropZone from './ImageDropZone'
 
 export default function TerritoryHistoryModal({ territory, onClose, onUpdated }) {
   const [history, setHistory] = useState([])
@@ -16,6 +19,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
   const [frontPreview, setFrontPreview] = useState(territory.card_front_image_url ?? null)
   const [backPreview, setBackPreview] = useState(territory.card_back_image_url ?? null)
   const [lightboxSrc, setLightboxSrc] = useState(null)
+  const [pendingDeleteId, setPendingDeleteId] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -125,7 +129,25 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
 
   async function handleDeleteEntry(id) {
     await supabase.from('territory_history').delete().eq('id', id)
+    setPendingDeleteId(null)
     fetchHistory()
+  }
+
+  async function shareImages() {
+    const files = []
+    if (frontPreview) {
+      const res = await fetch(frontPreview)
+      const blob = await res.blob()
+      files.push(new File([blob], `${territoryTitle}-frente.jpg`, { type: 'image/jpeg' }))
+    }
+    if (backPreview) {
+      const res = await fetch(backPreview)
+      const blob = await res.blob()
+      files.push(new File([blob], `${territoryTitle}-verso.jpg`, { type: 'image/jpeg' }))
+    }
+    if (files.length && navigator.canShare?.({ files })) {
+      await navigator.share({ files })
+    }
   }
 
   async function downloadOne(url, filename) {
@@ -287,12 +309,22 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
               ))}
             </div>
             {(frontPreview || backPreview) && (
-              <button
-                onClick={downloadBoth}
-                className="mt-2 w-full text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
-              >
-                ⬇ Baixar cartões
-              </button>
+              <div className="mt-2 flex gap-2">
+                <button
+                  onClick={downloadBoth}
+                  className="flex-1 text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
+                >
+                  ⬇ Baixar cartões
+                </button>
+                {navigator.canShare && (
+                  <button
+                    onClick={shareImages}
+                    className="flex-1 text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
+                  >
+                    ↗ Partilhar
+                  </button>
+                )}
+              </div>
             )}
           </div>
 
@@ -394,13 +426,31 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
                         {entry.return_date && ` · Entregou: ${formatDate(entry.return_date)}`}
                       </p>
                     </div>
-                    <button
-                      onClick={() => handleDeleteEntry(entry.id)}
-                      className="shrink-0 ml-2 text-gray-300 hover:text-red-400 transition-colors text-base leading-none mt-0.5"
-                      title="Remover"
-                    >
-                      ×
-                    </button>
+                    {pendingDeleteId === entry.id ? (
+                      <div className="flex items-center gap-1 shrink-0 ml-2">
+                        <span className="text-xs text-gray-400">Apagar?</span>
+                        <button
+                          onClick={() => handleDeleteEntry(entry.id)}
+                          className="text-xs text-red-500 hover:text-red-700 font-medium"
+                        >
+                          Sim
+                        </button>
+                        <button
+                          onClick={() => setPendingDeleteId(null)}
+                          className="text-gray-400 hover:text-gray-600 text-base leading-none"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setPendingDeleteId(entry.id)}
+                        className="shrink-0 ml-2 text-gray-300 hover:text-red-400 transition-colors text-base leading-none mt-0.5"
+                        title="Remover"
+                      >
+                        ×
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -513,57 +563,3 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
   )
 }
 
-function ImageDropZone({ preview, onFile, onClear }) {
-  const [dragActive, setDragActive] = useState(false)
-  const inputRef = useRef(null)
-
-  function handleDrop(e) {
-    e.preventDefault()
-    setDragActive(false)
-    const file = e.dataTransfer.files[0]
-    if (file && file.type.startsWith('image/')) onFile(file)
-  }
-
-  return (
-    <div
-      className={`relative rounded-xl border-2 border-dashed transition-colors cursor-pointer overflow-hidden
-        ${dragActive ? 'border-blue-400 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:border-gray-400'}`}
-      style={{ minHeight: '7rem' }}
-      onDragOver={e => { e.preventDefault(); setDragActive(true) }}
-      onDragLeave={() => setDragActive(false)}
-      onDrop={handleDrop}
-      onClick={() => inputRef.current?.click()}
-    >
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={e => { const f = e.target.files[0]; if (f) onFile(f) }}
-      />
-      {preview ? (
-        <>
-          <img src={preview} alt="preview" className="w-full object-cover" style={{ minHeight: '7rem', maxHeight: '10rem' }} />
-          <button
-            onClick={e => { e.stopPropagation(); onClear() }}
-            className="absolute top-1.5 right-1.5 bg-black/50 hover:bg-black/70 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs leading-none transition-colors"
-            title="Remover imagem"
-          >
-            ✕
-          </button>
-        </>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-4 gap-1 text-gray-400 select-none" style={{ minHeight: '7rem' }}>
-          <span className="text-2xl">🖼</span>
-          <span className="text-xs text-center px-2">Arraste uma imagem ou clique para selecionar</span>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function formatDate(val) {
-  if (!val) return '—'
-  const [y, m, d] = val.split('-')
-  return `${d}/${m}/${y}`
-}
