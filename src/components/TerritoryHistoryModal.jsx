@@ -295,6 +295,14 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
             )}
           </div>
 
+          {/* Notes */}
+          {!showEditForm && territory.notes && (
+            <div className="bg-gray-50 rounded-xl px-3 py-2.5">
+              <p className="text-xs font-medium text-gray-500 mb-1">Observações</p>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap">{territory.notes}</p>
+            </div>
+          )}
+
           {/* Edit territory toggle */}
           {showEditForm ? (
             <div className="border border-gray-200 rounded-xl p-4 space-y-3">
