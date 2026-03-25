@@ -59,7 +59,16 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   return (
     <div className="min-h-screen bg-[#f0f0f0] flex">
 
-      {/* Main content */}
+      {/* Pending edits sidebar — desktop left 30% */}
+      <div className="hidden lg:flex flex-col w-[30%] shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200">
+        <PendingEditsPanel
+          entries={pendingEdits}
+          onDone={handleDone}
+          sidebar
+        />
+      </div>
+
+      {/* Main content — 70% */}
       <div className="flex-1 min-w-0 relative">
 
       {/* Top-right actions */}
@@ -196,16 +205,6 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       )}
       </div>
 
-      {/* Permanent sidebar — desktop only */}
-      <div className="hidden lg:flex flex-col w-72 shrink-0 p-5 pt-16">
-        <div className="sticky top-5 rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-2.5rem)]">
-          <PendingEditsPanel
-            entries={pendingEdits}
-            onDone={handleDone}
-            sidebar
-          />
-        </div>
-      </div>
     </div>
   )
 }
