@@ -249,36 +249,46 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
 
         <div className="px-6 py-4 space-y-5">
           {/* Card images — side by side */}
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { src: frontPreview, label: 'Frente', suffix: 'frente' },
-              { src: backPreview, label: 'Verso', suffix: 'verso' },
-            ].map(({ src, label, suffix }) => (
-              <div key={label}>
-                <div className="relative">
-                  <div
-                    onClick={() => src && setLightboxSrc(src)}
-                    className={`rounded-xl overflow-hidden bg-gray-100 border border-gray-200 ${src ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''}`}
-                  >
-                    {src ? (
-                      <img src={src} alt={`${territoryTitle} — ${label}`} className="w-full object-cover aspect-[4/3]" />
-                    ) : (
-                      <div className="aspect-[4/3] flex items-center justify-center text-gray-400 text-xs">Sem imagem</div>
+          <div>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { src: frontPreview, label: 'Frente', suffix: 'frente' },
+                { src: backPreview, label: 'Verso', suffix: 'verso' },
+              ].map(({ src, label, suffix }) => (
+                <div key={label}>
+                  <div className="relative">
+                    <div
+                      onClick={() => src && setLightboxSrc(src)}
+                      className={`rounded-xl overflow-hidden bg-gray-100 border border-gray-200 ${src ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''}`}
+                    >
+                      {src ? (
+                        <img src={src} alt={`${territoryTitle} — ${label}`} className="w-full object-cover aspect-[4/3]" />
+                      ) : (
+                        <div className="aspect-[4/3] flex items-center justify-center text-gray-400 text-xs">Sem imagem</div>
+                      )}
+                    </div>
+                    {src && (
+                      <button
+                        onClick={e => { e.stopPropagation(); downloadOne(src, `${territoryTitle}-${suffix}.jpg`) }}
+                        className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-lg px-2 py-1 text-xs leading-none transition-colors"
+                        title={`Baixar ${label}`}
+                      >
+                        ⬇
+                      </button>
                     )}
                   </div>
-                  {src && (
-                    <button
-                      onClick={e => { e.stopPropagation(); downloadOne(src, `${territoryTitle}-${suffix}.jpg`) }}
-                      className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-lg px-2 py-1 text-xs leading-none transition-colors"
-                      title={`Baixar ${label}`}
-                    >
-                      ⬇
-                    </button>
-                  )}
+                  <p className="text-center text-xs text-gray-500 mt-1 font-medium">{label}</p>
                 </div>
-                <p className="text-center text-xs text-gray-500 mt-1 font-medium">{label}</p>
-              </div>
-            ))}
+              ))}
+            </div>
+            {(frontPreview || backPreview) && (
+              <button
+                onClick={downloadBoth}
+                className="mt-2 w-full text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
+              >
+                ⬇ Baixar cartões
+              </button>
+            )}
           </div>
 
           {/* Edit territory toggle */}
@@ -465,14 +475,6 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
 
         {/* Footer actions */}
         <div className="px-6 pb-6 flex gap-2 border-t border-gray-100 pt-4">
-          {(frontPreview || backPreview) && (
-            <button
-              onClick={downloadBoth}
-              className="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-1.5"
-            >
-              ⬇ Baixar cartões
-            </button>
-          )}
           <div className="flex gap-2 flex-1 justify-end">
             {isAvailable && !showAssignForm && (
               <button
