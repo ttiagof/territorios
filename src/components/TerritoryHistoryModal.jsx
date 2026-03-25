@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function TerritoryHistoryModal({ territory, onClose, onUpdated }) {
@@ -127,20 +127,21 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
     fetchHistory()
   }
 
+  async function downloadOne(url, filename) {
+    const res = await fetch(url)
+    const blob = await res.blob()
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
   async function downloadBoth() {
-    async function dl(url, filename) {
-      const res = await fetch(url)
-      const blob = await res.blob()
-      const a = document.createElement('a')
-      a.href = URL.createObjectURL(blob)
-      a.download = filename
-      a.click()
-      URL.revokeObjectURL(a.href)
-    }
-    if (frontPreview) await dl(frontPreview, `${territoryTitle}-frente.jpg`)
+    if (frontPreview) await downloadOne(frontPreview, `${territoryTitle}-frente.jpg`)
     if (backPreview) {
       await new Promise(r => setTimeout(r, 300))
-      await dl(backPreview, `${territoryTitle}-verso.jpg`)
+      await downloadOne(backPreview, `${territoryTitle}-verso.jpg`)
     }
   }
 
@@ -250,18 +251,29 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
           {/* Card images — side by side */}
           <div className="grid grid-cols-2 gap-3">
             {[
-              { src: frontPreview, label: 'Frente' },
-              { src: backPreview, label: 'Verso' },
-            ].map(({ src, label }) => (
+              { src: frontPreview, label: 'Frente', suffix: 'frente' },
+              { src: backPreview, label: 'Verso', suffix: 'verso' },
+            ].map(({ src, label, suffix }) => (
               <div key={label}>
-                <div
-                  onClick={() => src && setLightboxSrc(src)}
-                  className={`rounded-xl overflow-hidden bg-gray-100 border border-gray-200 ${src ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''}`}
-                >
-                  {src ? (
-                    <img src={src} alt={`${territoryTitle} — ${label}`} className="w-full object-cover aspect-[4/3]" />
-                  ) : (
-                    <div className="aspect-[4/3] flex items-center justify-center text-gray-400 text-xs">Sem imagem</div>
+                <div className="relative">
+                  <div
+                    onClick={() => src && setLightboxSrc(src)}
+                    className={`rounded-xl overflow-hidden bg-gray-100 border border-gray-200 ${src ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''}`}
+                  >
+                    {src ? (
+                      <img src={src} alt={`${territoryTitle} — ${label}`} className="w-full object-cover aspect-[4/3]" />
+                    ) : (
+                      <div className="aspect-[4/3] flex items-center justify-center text-gray-400 text-xs">Sem imagem</div>
+                    )}
+                  </div>
+                  {src && (
+                    <button
+                      onClick={e => { e.stopPropagation(); downloadOne(src, `${territoryTitle}-${suffix}.jpg`) }}
+                      className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-lg px-2 py-1 text-xs leading-none transition-colors"
+                      title={`Baixar ${label}`}
+                    >
+                      ⬇
+                    </button>
                   )}
                 </div>
                 <p className="text-center text-xs text-gray-500 mt-1 font-medium">{label}</p>
@@ -293,30 +305,18 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Imagem da frente</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={e => {
-                    const file = e.target.files[0]
-                    if (!file) return
-                    setFrontImageFile(file)
-                    setFrontPreview(URL.createObjectURL(file))
-                  }}
-                  className="text-sm text-gray-600"
+                <ImageDropZone
+                  preview={frontPreview}
+                  onFile={file => { setFrontImageFile(file); setFrontPreview(URL.createObjectURL(file)) }}
+                  onClear={() => { setFrontImageFile(null); setFrontPreview(null) }}
                 />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Imagem do verso</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={e => {
-                    const file = e.target.files[0]
-                    if (!file) return
-                    setBackImageFile(file)
-                    setBackPreview(URL.createObjectURL(file))
-                  }}
-                  className="text-sm text-gray-600"
+                <ImageDropZone
+                  preview={backPreview}
+                  onFile={file => { setBackImageFile(file); setBackPreview(URL.createObjectURL(file)) }}
+                  onClear={() => { setBackImageFile(null); setBackPreview(null) }}
                 />
               </div>
               <div>
@@ -495,6 +495,55 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
       </div>
     </div>
     </>
+  )
+}
+
+function ImageDropZone({ preview, onFile, onClear }) {
+  const [dragActive, setDragActive] = useState(false)
+  const inputRef = useRef(null)
+
+  function handleDrop(e) {
+    e.preventDefault()
+    setDragActive(false)
+    const file = e.dataTransfer.files[0]
+    if (file && file.type.startsWith('image/')) onFile(file)
+  }
+
+  return (
+    <div
+      className={`relative rounded-xl border-2 border-dashed transition-colors cursor-pointer overflow-hidden
+        ${dragActive ? 'border-blue-400 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:border-gray-400'}`}
+      style={{ minHeight: '7rem' }}
+      onDragOver={e => { e.preventDefault(); setDragActive(true) }}
+      onDragLeave={() => setDragActive(false)}
+      onDrop={handleDrop}
+      onClick={() => inputRef.current?.click()}
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={e => { const f = e.target.files[0]; if (f) onFile(f) }}
+      />
+      {preview ? (
+        <>
+          <img src={preview} alt="preview" className="w-full object-cover" style={{ minHeight: '7rem', maxHeight: '10rem' }} />
+          <button
+            onClick={e => { e.stopPropagation(); onClear() }}
+            className="absolute top-1.5 right-1.5 bg-black/50 hover:bg-black/70 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs leading-none transition-colors"
+            title="Remover imagem"
+          >
+            ✕
+          </button>
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-4 gap-1 text-gray-400 select-none" style={{ minHeight: '7rem' }}>
+          <span className="text-2xl">🖼</span>
+          <span className="text-xs text-center px-2">Arraste uma imagem ou clique para selecionar</span>
+        </div>
+      )}
+    </div>
   )
 }
 
