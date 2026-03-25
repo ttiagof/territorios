@@ -4,11 +4,7 @@ import { compressImage } from '../lib/imageUtils'
 import ImageDropZone from './ImageDropZone'
 
 export default function AddTerritoryForm({ onClose, onAdded }) {
-  const [form, setForm] = useState({
-    name: '',
-    number: '',
-    notes: '',
-  })
+  const [form, setForm] = useState({ name: '', number: '', notes: '' })
   const [frontImageFile, setFrontImageFile] = useState(null)
   const [backImageFile, setBackImageFile] = useState(null)
   const [frontPreview, setFrontPreview] = useState(null)
@@ -71,24 +67,29 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-3xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">Novo território</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+          <h2 className="text-base font-semibold text-gray-900">Novo território</h2>
+          <button
+            onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 text-sm transition-colors"
+          >
+            ✕
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
+        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <FormField label="Nome" name="name" value={form.name} onChange={handleField} placeholder="Ex: Rodeio" />
             <FormField label="Número *" name="number" value={form.number} onChange={handleField} placeholder="Ex: 36" />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Imagem da frente</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">Imagem da frente</label>
             <ImageDropZone
               preview={frontPreview}
               onFile={file => { setFrontImageFile(file); setFrontPreview(URL.createObjectURL(file)) }}
@@ -97,7 +98,7 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Imagem do verso</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">Imagem do verso</label>
             <ImageDropZone
               preview={backPreview}
               onFile={file => { setBackImageFile(file); setBackPreview(URL.createObjectURL(file)) }}
@@ -106,30 +107,30 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Observações</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">Observações</label>
             <textarea
               name="notes"
               value={form.notes}
               onChange={handleField}
               rows={3}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-black/10"
             />
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-xs text-red-500">{error}</p>}
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={onClose}
-              className="text-sm px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+              className="text-sm px-4 py-2.5 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 font-medium transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              className="text-sm px-4 py-2.5 rounded-xl bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 font-semibold transition-colors"
             >
               {saving ? 'Salvando...' : 'Adicionar'}
             </button>
@@ -143,14 +144,14 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
 function FormField({ label, name, value, onChange, type = 'text', placeholder = '' }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
+      <label className="block text-xs font-medium text-gray-500 mb-1.5">{label}</label>
       <input
         type={type}
         name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
       />
     </div>
   )

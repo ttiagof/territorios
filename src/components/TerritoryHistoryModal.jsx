@@ -27,7 +27,6 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
     fetchHistory()
   }, [territory.id])
 
-  // Sync previews if territory prop updates (e.g. after saving edit)
   useEffect(() => {
     if (!frontImageFile) setFrontPreview(territory.card_front_image_url ?? null)
     if (!backImageFile) setBackPreview(territory.card_back_image_url ?? null)
@@ -88,7 +87,6 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
     setSaving(true)
     setError(null)
     try {
-      // Rolling cap: max 50 entries
       const { count } = await supabase
         .from('territory_history')
         .select('*', { count: 'exact', head: true })
@@ -240,50 +238,57 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
       >
         <button
           onClick={() => setLightboxSrc(null)}
-          className="absolute top-4 right-6 text-white text-2xl leading-none hover:text-gray-300"
+          className="absolute top-4 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"
         >
           ✕
         </button>
         <img
           src={lightboxSrc}
           alt="Cartão ampliado"
-          className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl"
+          className="max-h-[90vh] max-w-[90vw] object-contain rounded-2xl"
           onClick={e => e.stopPropagation()}
         />
       </div>
     )}
+
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-3xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-semibold text-gray-900">{territoryTitle}</span>
-              <span className={`w-2.5 h-2.5 rounded-full ${isAvailable ? 'bg-green-500' : 'bg-red-500'}`} />
-              <span className={`text-xs font-medium ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
+            <div className="flex items-center gap-2.5">
+              <span className="text-base font-semibold text-gray-900">{territoryTitle}</span>
+              <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                isAvailable ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'
+              }`}>
                 {isAvailable ? 'Disponível' : 'Designado'}
               </span>
             </div>
             {!isAvailable && territory.assigned_to && (
-              <p className="text-sm text-gray-500 mt-0.5">
-                Com <span className="font-medium text-gray-700">{territory.assigned_to}</span>
+              <p className="text-sm text-gray-400 mt-0.5">
+                Com <span className="font-medium text-gray-600">{territory.assigned_to}</span>
                 {territory.assigned_date && (
-                  <span className="text-gray-400"> · desde {formatDate(territory.assigned_date)}</span>
+                  <span> · desde {formatDate(territory.assigned_date)}</span>
                 )}
               </p>
             )}
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+          <button
+            onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 text-sm transition-colors"
+          >
+            ✕
+          </button>
         </div>
 
-        <div className="px-6 py-4 space-y-5">
-          {/* Card images — side by side */}
+        <div className="px-6 py-5 space-y-5">
+          {/* Card images */}
           <div>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -294,40 +299,40 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   <div className="relative">
                     <div
                       onClick={() => src && setLightboxSrc(src)}
-                      className={`rounded-xl overflow-hidden bg-gray-100 border border-gray-200 ${src ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''}`}
+                      className={`rounded-2xl overflow-hidden bg-[#f0f0f0] ${src ? 'cursor-pointer' : ''}`}
                     >
                       {src ? (
                         <img src={src} alt={`${territoryTitle} — ${label}`} className="w-full object-cover aspect-[5/3]" />
                       ) : (
-                        <div className="aspect-[5/3] flex items-center justify-center text-gray-400 text-xs">Sem imagem</div>
+                        <div className="aspect-[5/3] flex items-center justify-center text-gray-300 text-xs">Sem imagem</div>
                       )}
                     </div>
                     {src && (
                       <button
                         onClick={e => { e.stopPropagation(); downloadOne(src, `${territoryTitle}-${suffix}.jpg`) }}
-                        className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-lg px-2 py-1 text-xs leading-none transition-colors"
+                        className="absolute top-2 right-2 bg-black/40 hover:bg-black/60 text-white rounded-lg px-2 py-1 text-xs leading-none transition-colors"
                         title={`Baixar ${label}`}
                       >
                         ⬇
                       </button>
                     )}
                   </div>
-                  <p className="text-center text-xs text-gray-500 mt-1 font-medium">{label}</p>
+                  <p className="text-center text-xs text-gray-400 mt-1.5 font-medium">{label}</p>
                 </div>
               ))}
             </div>
             {(frontPreview || backPreview) && (
-              <div className="mt-2 flex gap-2">
+              <div className="mt-2.5 flex gap-2">
                 <button
                   onClick={downloadBoth}
-                  className="flex-1 text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
+                  className="flex-1 text-sm py-2 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 transition-colors font-medium"
                 >
                   ⬇ Baixar cartões
                 </button>
                 {navigator.canShare && (
                   <button
                     onClick={shareImages}
-                    className="flex-1 text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
+                    className="flex-1 text-sm py-2 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 transition-colors font-medium"
                   >
                     ↗ Partilhar
                   </button>
@@ -338,36 +343,36 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
 
           {/* Notes */}
           {!showEditForm && territory.notes && (
-            <div className="bg-gray-50 rounded-xl px-3 py-2.5">
+            <div className="bg-[#f0f0f0] rounded-2xl px-4 py-3">
               <p className="text-xs font-medium text-gray-500 mb-1">Observações</p>
               <p className="text-sm text-gray-700 whitespace-pre-wrap">{territory.notes}</p>
             </div>
           )}
 
-          {/* Edit territory toggle */}
+          {/* Edit form */}
           {showEditForm ? (
-            <div className="border border-gray-200 rounded-xl p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-800">Editar território</h3>
+            <div className="bg-[#f0f0f0] rounded-2xl p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900">Editar território</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Nome</label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Nome</label>
                   <input
                     value={editForm.name}
                     onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Número</label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Número</label>
                   <input
                     value={editForm.number}
                     onChange={e => setEditForm(f => ({ ...f, number: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Imagem da frente</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Imagem da frente</label>
                 <ImageDropZone
                   preview={frontPreview}
                   onFile={file => { setFrontImageFile(file); setFrontPreview(URL.createObjectURL(file)) }}
@@ -375,7 +380,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Imagem do verso</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Imagem do verso</label>
                 <ImageDropZone
                   preview={backPreview}
                   onFile={file => { setBackImageFile(file); setBackPreview(URL.createObjectURL(file)) }}
@@ -383,25 +388,25 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Observações</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Observações</label>
                 <textarea
                   value={editForm.notes}
                   onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
                   rows={2}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-black/10"
                 />
               </div>
               <div className="flex justify-end gap-2">
                 <button
                   onClick={() => { setShowEditForm(false); setFrontImageFile(null); setBackImageFile(null) }}
-                  className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50"
+                  className="text-sm px-4 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleSaveEdit}
                   disabled={saving}
-                  className="text-sm px-3 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                  className="text-sm px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 font-semibold transition-colors"
                 >
                   {saving ? 'Salvando...' : 'Salvar'}
                 </button>
@@ -410,53 +415,53 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
           ) : (
             <button
               onClick={() => setShowEditForm(true)}
-              className="text-xs text-gray-400 hover:text-gray-600 underline"
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
             >
-              Editar território
+              Editar território →
             </button>
           )}
 
           {/* History */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-800 mb-3">Histórico</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Histórico</h3>
             {loadingHistory ? (
               <p className="text-sm text-gray-400">Carregando...</p>
             ) : history.length === 0 ? (
-              <p className="text-sm text-gray-400 italic">Nenhum registro ainda.</p>
+              <p className="text-sm text-gray-400">Nenhum registro ainda.</p>
             ) : (
-              <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+              <div className="space-y-2 max-h-64 overflow-y-auto">
                 {history.map(entry => (
-                  <div key={entry.id} className="flex items-start justify-between text-sm bg-gray-50 rounded-lg px-3 py-2">
+                  <div key={entry.id} className="flex items-start justify-between text-sm bg-[#f0f0f0] rounded-xl px-3 py-2.5">
                     <div>
                       <p className="font-medium text-gray-800">{entry.person_name}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">
+                      <p className="text-xs text-gray-400 mt-0.5">
                         Recebeu: {formatDate(entry.assigned_date)}
                         {entry.return_date && ` · Entregou: ${formatDate(entry.return_date)}`}
                       </p>
                     </div>
                     {pendingDeleteId === entry.id ? (
-                      <div className="flex items-center gap-1 shrink-0 ml-2">
+                      <div className="flex items-center gap-1.5 shrink-0 ml-2">
                         <span className="text-xs text-gray-400">Apagar?</span>
                         <button
                           onClick={() => handleDeleteEntry(entry.id)}
-                          className="text-xs text-red-500 hover:text-red-700 font-medium"
+                          className="text-xs text-red-500 hover:text-red-700 font-semibold"
                         >
                           Sim
                         </button>
                         <button
                           onClick={() => setPendingDeleteId(null)}
-                          className="text-gray-400 hover:text-gray-600 text-base leading-none"
+                          className="text-gray-400 hover:text-gray-600 text-sm leading-none"
                         >
-                          ×
+                          ✕
                         </button>
                       </div>
                     ) : (
                       <button
                         onClick={() => setPendingDeleteId(entry.id)}
-                        className="shrink-0 ml-2 text-gray-300 hover:text-red-400 transition-colors text-base leading-none mt-0.5"
+                        className="shrink-0 ml-2 text-gray-300 hover:text-red-400 transition-colors text-sm leading-none mt-0.5"
                         title="Remover"
                       >
-                        ×
+                        ✕
                       </button>
                     )}
                   </div>
@@ -467,24 +472,24 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
 
           {/* Assign form */}
           {showAssignForm && (
-            <form onSubmit={handleAssign} className="border border-blue-100 bg-blue-50 rounded-xl p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-800">Atribuir território</h3>
+            <form onSubmit={handleAssign} className="bg-[#f0f0f0] rounded-2xl p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900">Atribuir território</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Nome da pessoa</label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Nome da pessoa</label>
                   <input
                     value={assignForm.person_name}
                     onChange={e => setAssignForm(f => ({ ...f, person_name: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Data de designação</label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Data de designação</label>
                   <input
                     type="date"
                     value={assignForm.assigned_date}
                     onChange={e => setAssignForm(f => ({ ...f, assigned_date: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
                   />
                 </div>
               </div>
@@ -492,14 +497,14 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                 <button
                   type="button"
                   onClick={() => { setShowAssignForm(false); setError(null) }}
-                  className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50"
+                  className="text-sm px-4 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="text-sm px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                  className="text-sm px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 font-semibold transition-colors"
                 >
                   {saving ? 'Salvando...' : 'Confirmar'}
                 </button>
@@ -509,31 +514,31 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
 
           {/* Deliver form */}
           {showReturnForm && (
-            <form onSubmit={handleDeliver} className="border border-red-100 bg-red-50 rounded-xl p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-800">
+            <form onSubmit={handleDeliver} className="bg-red-50 rounded-2xl p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900">
                 Entregar — {territory.assigned_to}
               </h3>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Data de entrega</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Data de entrega</label>
                 <input
                   type="date"
                   value={returnDate}
                   onChange={e => setReturnDate(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
+                  className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
                 />
               </div>
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => { setShowReturnForm(false); setError(null) }}
-                  className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50"
+                  className="text-sm px-4 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="text-sm px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+                  className="text-sm px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 disabled:opacity-40 font-semibold transition-colors"
                 >
                   {saving ? 'Salvando...' : 'Confirmar entrega'}
                 </button>
@@ -541,33 +546,30 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
             </form>
           )}
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-xs text-red-500">{error}</p>}
         </div>
 
         {/* Footer actions */}
-        <div className="px-6 pb-6 flex gap-2 border-t border-gray-100 pt-4">
-          <div className="flex gap-2 flex-1 justify-end">
-            {isAvailable && !showAssignForm && (
-              <button
-                onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
-                className="text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
-              >
-                Atribuir
-              </button>
-            )}
-            {!isAvailable && !showReturnForm && (
-              <button
-                onClick={() => { setShowReturnForm(true); setShowAssignForm(false); setError(null) }}
-                className="text-sm px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium"
-              >
-                Entregar
-              </button>
-            )}
-          </div>
+        <div className="px-6 pb-6 pt-4 border-t border-gray-100 flex gap-2 justify-end">
+          {isAvailable && !showAssignForm && (
+            <button
+              onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
+              className="text-sm px-5 py-2.5 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors font-semibold"
+            >
+              Atribuir
+            </button>
+          )}
+          {!isAvailable && !showReturnForm && (
+            <button
+              onClick={() => { setShowReturnForm(true); setShowAssignForm(false); setError(null) }}
+              className="text-sm px-5 py-2.5 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors font-semibold"
+            >
+              Entregar
+            </button>
+          )}
         </div>
       </div>
     </div>
     </>
   )
 }
-

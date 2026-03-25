@@ -16,7 +16,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">Edições pendentes</span>
           {entries.length > 0 && (
-            <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-2 py-0.5">
+            <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-2 py-0.5 leading-none">
               {entries.length}
             </span>
           )}
@@ -24,7 +24,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
         {!sidebar && (
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 text-sm transition-colors"
           >
             ✕
           </button>
@@ -35,7 +35,11 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
         {entries.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-center gap-2">
-            <span className="text-2xl">✓</span>
+            <div className="w-10 h-10 rounded-2xl bg-[#f0f0f0] flex items-center justify-center">
+              <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            </div>
             <p className="text-sm text-gray-400">Nenhuma edição pendente</p>
           </div>
         ) : (
@@ -45,13 +49,13 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
             return (
               <div
                 key={entry.id}
-                className={`rounded-xl border px-4 py-3 transition-all duration-300 ${
-                  done ? 'opacity-40 border-transparent' : 'border-transparent bg-[#f0f0f0]'
+                className={`rounded-2xl px-4 py-3 transition-all duration-300 ${
+                  done ? 'opacity-30' : 'bg-[#f0f0f0]'
                 }`}
               >
-                <div className={`${done ? 'line-through' : ''}`}>
-                  <p className={`text-[10px] font-semibold uppercase tracking-wide mb-1 ${
-                    isAssign ? 'text-blue-500' : 'text-red-400'
+                <div className={done ? 'line-through' : ''}>
+                  <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${
+                    isAssign ? 'text-gray-500' : 'text-red-400'
                   }`}>
                     {isAssign ? 'Designar' : 'Entregar'}
                   </p>
@@ -63,7 +67,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
                 {!done && (
                   <button
                     onClick={() => markDone(entry.id)}
-                    className="mt-2 w-full text-xs py-1.5 rounded-lg bg-gray-900 text-white hover:bg-gray-700 transition-colors font-medium"
+                    className="mt-2.5 w-full text-xs py-1.5 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors font-semibold"
                   >
                     ✓ Feito
                   </button>
@@ -83,10 +87,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
   return (
     <>
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40 bg-black/20"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 z-40 bg-black/20" onClick={onClose} />
       {/* Panel */}
       <div className="fixed top-0 right-0 h-full w-80 max-w-full bg-white shadow-2xl z-50 flex flex-col">
         {content}

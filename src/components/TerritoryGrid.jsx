@@ -87,7 +87,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         )}
         <button
           onClick={onSignOut}
-          className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          className="text-xs font-medium text-gray-400 hover:text-gray-700 transition-colors bg-[#f0f0f0] hover:bg-gray-200 px-3 py-1.5 rounded-full"
         >
           Sair
         </button>
@@ -241,8 +241,8 @@ function TerritoryCard({ territory, onClick }) {
       <div className="px-3 py-2.5">
         <div className="flex items-center justify-between gap-2">
           <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
-          <span className={`shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-            isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'
+          <span className={`shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+            isAvailable ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'
           }`}>
             {isAvailable ? 'Livre' : 'Ocupado'}
           </span>
