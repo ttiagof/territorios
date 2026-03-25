@@ -164,6 +164,8 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
         if (uploadError) throw uploadError
         const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
         updates.card_front_image_url = urlData.publicUrl
+      } else if (!frontPreview && territory.card_front_image_url) {
+        updates.card_front_image_url = null
       }
 
       if (backImageFile) {
@@ -175,6 +177,8 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
         if (uploadError) throw uploadError
         const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
         updates.card_back_image_url = urlData.publicUrl
+      } else if (!backPreview && territory.card_back_image_url) {
+        updates.card_back_image_url = null
       }
 
       const { data: updated } = await supabase
