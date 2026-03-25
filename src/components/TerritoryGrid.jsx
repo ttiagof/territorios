@@ -197,12 +197,14 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       </div>
 
       {/* Permanent sidebar — desktop only */}
-      <div className="hidden lg:flex flex-col w-72 shrink-0 min-h-screen bg-white border-l border-gray-200">
-        <PendingEditsPanel
-          entries={pendingEdits}
-          onDone={handleDone}
-          sidebar
-        />
+      <div className="hidden lg:flex flex-col w-72 shrink-0 p-5 pt-16">
+        <div className="sticky top-5 rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-2.5rem)]">
+          <PendingEditsPanel
+            entries={pendingEdits}
+            onDone={handleDone}
+            sidebar
+          />
+        </div>
       </div>
     </div>
   )
