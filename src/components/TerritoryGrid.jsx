@@ -68,11 +68,11 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         />
       </div>
 
-      {/* Main content — territories floating card */}
-      <div className="flex-1 min-w-0 rounded-3xl bg-white shadow-sm overflow-hidden relative">
+      {/* Main content */}
+      <div className="flex-1 min-w-0 relative">
 
       {/* Top-right actions */}
-      <div className="absolute top-5 right-6 flex items-center gap-3 z-10">
+      <div className="flex justify-end items-center gap-3 mb-4">
         {/* Badge — mobile only */}
         {pendingEdits.length > 0 && (
           <button
@@ -93,13 +93,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         </button>
       </div>
 
-      <div className="px-6 pt-16 pb-12">
-
-        {/* Title */}
-        <div className="text-center mb-10">
-          <h1 className="text-7xl font-black text-gray-900 tracking-tight leading-none">Territórios</h1>
-          <p className="text-2xl text-gray-400 font-normal mt-2">Ventosa</p>
-        </div>
+      <div className="pb-8">
 
         {/* Filter pills */}
         <div className="flex justify-center gap-3 mb-5">
@@ -110,7 +104,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               className={`px-8 py-3 rounded-full text-sm font-medium border transition-all ${
                 statusFilter === f.value
                   ? 'bg-gray-900 text-white border-gray-900'
-                  : 'bg-[#f0f0f0] text-gray-600 border-transparent hover:border-gray-300'
+                  : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
               }`}
             >
               {f.label}
@@ -148,10 +142,10 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
 
         {/* Grid */}
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="rounded-3xl overflow-hidden bg-[#f0f0f0] animate-pulse">
-                <div className="w-full aspect-[5/3] bg-gray-200" />
+              <div key={i} className="rounded-2xl overflow-hidden bg-[#e8e8e8] animate-pulse">
+                <div className="w-full aspect-square bg-[#d8d8d8]" />
                 <div className="px-3 py-2.5 space-y-2">
                   <div className="h-3 bg-gray-200 rounded w-2/3" />
                   <div className="h-2.5 bg-gray-100 rounded w-1/2" />
@@ -171,7 +165,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
               {filtered.map(t => (
                 <TerritoryCard key={t.id} territory={t} onClick={() => setSelected(t)} />
               ))}
@@ -218,10 +212,10 @@ function TerritoryCard({ territory, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col rounded-3xl overflow-hidden bg-[#f0f0f0] hover:bg-[#e8e8e8] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white"
+      className="group flex flex-col rounded-2xl overflow-hidden bg-[#e8e8e8] hover:bg-[#dcdcdc] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0]"
     >
       {/* Image area */}
-      <div className="w-full aspect-[5/3] overflow-hidden bg-[#e8e8e8] relative">
+      <div className="w-full aspect-square overflow-hidden bg-[#d8d8d8] relative">
         {territory.card_front_image_url ? (
           <img
             src={territory.card_front_image_url}
