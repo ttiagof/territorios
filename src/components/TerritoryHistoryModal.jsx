@@ -5,7 +5,7 @@ import { compressImage } from '../lib/imageUtils'
 import { formatDate } from '../lib/utils'
 import ImageDropZone from './ImageDropZone'
 
-export default function TerritoryHistoryModal({ territory, onClose, onUpdated }) {
+export default function TerritoryHistoryModal({ territory, onClose, onUpdated, onPendingEdit }) {
   const [history, setHistory] = useState([])
   const [loadingHistory, setLoadingHistory] = useState(true)
   const [showAssignForm, setShowAssignForm] = useState(false)
@@ -71,6 +71,10 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
       onUpdated(updated)
       setShowAssignForm(false)
       setAssignForm({ person_name: '', assigned_date: '' })
+
+      const editEntry = { type: 'assign', territory_name: territoryTitle, person_name: assignForm.person_name, date: assignForm.assigned_date }
+      const { data: editData } = await supabase.from('pending_edits').insert(editEntry).select().single()
+      if (editData) onPendingEdit(editData)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -120,6 +124,10 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
       setShowReturnForm(false)
       setReturnDate('')
       fetchHistory()
+
+      const editEntry = { type: 'deliver', territory_name: territoryTitle, person_name: territory.assigned_to, date: returnDate }
+      const { data: editData } = await supabase.from('pending_edits').insert(editEntry).select().single()
+      if (editData) onPendingEdit(editData)
     } catch (err) {
       setError(err.message)
     } finally {

@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import TerritoryHistoryModal from './TerritoryHistoryModal'
 import AddTerritoryForm from './AddTerritoryForm'
+import PendingEditsPanel from './PendingEditsPanel'
 import { formatDate } from '../lib/utils'
+import { supabase } from '../lib/supabase'
 
 const STATUS_FILTERS = [
   { value: '', label: 'Todos' },
@@ -14,6 +16,21 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   const [showAdd, setShowAdd] = useState(false)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  const [pendingEdits, setPendingEdits] = useState([])
+  const [showEdits, setShowEdits] = useState(false)
+
+  useEffect(() => {
+    supabase
+      .from('pending_edits')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setPendingEdits(data ?? []))
+  }, [])
+
+  async function handleDone(id) {
+    await supabase.from('pending_edits').delete().eq('id', id)
+    setPendingEdits(prev => prev.filter(e => e.id !== id))
+  }
 
   const filtered = territories
     .filter(t => !statusFilter || t.status === statusFilter)
@@ -42,13 +59,26 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   return (
     <div className="min-h-screen bg-[#f0f0f0] relative">
 
-      {/* Sair — subtle top right */}
-      <button
-        onClick={onSignOut}
-        className="absolute top-5 right-6 text-sm text-gray-400 hover:text-gray-600 transition-colors z-10"
-      >
-        Sair
-      </button>
+      {/* Top-right actions */}
+      <div className="absolute top-5 right-6 flex items-center gap-3 z-10">
+        {pendingEdits.length > 0 && (
+          <button
+            onClick={() => setShowEdits(true)}
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+          >
+            <span>✎</span>
+            <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-1.5 py-0.5 leading-none">
+              {pendingEdits.length}
+            </span>
+          </button>
+        )}
+        <button
+          onClick={onSignOut}
+          className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          Sair
+        </button>
+      </div>
 
       <div className="max-w-4xl mx-auto px-6 pt-16 pb-12">
 
@@ -143,6 +173,14 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           territory={selected}
           onClose={() => setSelected(null)}
           onUpdated={handleUpdated}
+          onPendingEdit={entry => setPendingEdits(prev => [entry, ...prev])}
+        />
+      )}
+      {showEdits && (
+        <PendingEditsPanel
+          entries={pendingEdits}
+          onDone={handleDone}
+          onClose={() => setShowEdits(false)}
         />
       )}
       {showAdd && (
