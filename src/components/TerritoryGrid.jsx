@@ -57,10 +57,10 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f0f0] flex gap-4 p-4 items-start">
+    <div className="h-screen bg-[#f0f0f0] flex gap-4 p-4">
 
       {/* Pending edits sidebar — desktop left 30%, floating card */}
-      <div className="hidden lg:flex flex-col w-[30%] shrink-0 sticky top-4 rounded-3xl bg-white shadow-sm overflow-hidden max-h-[calc(100vh-2rem)]">
+      <div className="hidden lg:flex flex-col w-[30%] shrink-0 rounded-3xl bg-white shadow-sm overflow-hidden">
         <PendingEditsPanel
           entries={pendingEdits}
           onDone={handleDone}
@@ -69,10 +69,10 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       </div>
 
       {/* Main content */}
-      <div className="flex-1 min-w-0 relative">
+      <div className="flex-1 min-w-0 rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col">
 
       {/* Top-right actions */}
-      <div className="flex justify-end items-center gap-3 mb-4">
+      <div className="flex justify-end items-center gap-3 px-6 pt-5 shrink-0">
         {/* Badge — mobile only */}
         {pendingEdits.length > 0 && (
           <button
@@ -93,10 +93,10 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         </button>
       </div>
 
-      <div className="pb-8">
+      <div className="flex-1 overflow-y-auto px-6 pt-4 pb-6">
 
         {/* Filter pills */}
-        <div className="flex justify-center gap-3 mb-5">
+        <div className="flex justify-start gap-3 mb-5">
           {STATUS_FILTERS.map(f => (
             <button
               key={f.value}
@@ -113,7 +113,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         </div>
 
         {/* Search + Add */}
-        <div className="flex gap-3 mb-8 max-w-2xl mx-auto">
+        <div className="flex gap-3 mb-6">
           <div className="relative flex-1">
             <svg
               className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
