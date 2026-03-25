@@ -154,7 +154,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="rounded-2xl overflow-hidden bg-[#e8e8e8] animate-pulse">
-                <div className="w-full aspect-square bg-[#d8d8d8]" />
+                <div className="w-full aspect-[4/3] bg-[#d8d8d8]" />
                 <div className="px-3 py-2.5 space-y-2">
                   <div className="h-3 bg-gray-200 rounded w-2/3" />
                   <div className="h-2.5 bg-gray-100 rounded w-1/2" />
@@ -224,7 +224,7 @@ function TerritoryCard({ territory, onClick }) {
       className="group flex flex-col rounded-2xl overflow-hidden bg-[#e8e8e8] hover:bg-[#dcdcdc] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0]"
     >
       {/* Image area */}
-      <div className="w-full aspect-square overflow-hidden bg-[#d8d8d8] relative">
+      <div className="w-full aspect-[4/3] overflow-hidden bg-[#d8d8d8] relative">
         {territory.card_front_image_url ? (
           <img
             src={territory.card_front_image_url}
