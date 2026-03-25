@@ -57,14 +57,18 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f0f0] relative">
+    <div className="min-h-screen bg-[#f0f0f0] flex">
+
+      {/* Main content */}
+      <div className="flex-1 min-w-0 relative">
 
       {/* Top-right actions */}
       <div className="absolute top-5 right-6 flex items-center gap-3 z-10">
+        {/* Badge — mobile only */}
         {pendingEdits.length > 0 && (
           <button
             onClick={() => setShowEdits(true)}
-            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+            className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
           >
             <span>✎</span>
             <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-1.5 py-0.5 leading-none">
@@ -176,6 +180,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           onPendingEdit={entry => setPendingEdits(prev => [entry, ...prev])}
         />
       )}
+      {/* Mobile slide-in panel */}
       {showEdits && (
         <PendingEditsPanel
           entries={pendingEdits}
@@ -189,6 +194,16 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           onAdded={handleAdded}
         />
       )}
+      </div>
+
+      {/* Permanent sidebar — desktop only */}
+      <div className="hidden lg:flex flex-col w-72 shrink-0 min-h-screen bg-white border-l border-gray-200">
+        <PendingEditsPanel
+          entries={pendingEdits}
+          onDone={handleDone}
+          sidebar
+        />
+      </div>
     </div>
   )
 }
