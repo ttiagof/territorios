@@ -57,10 +57,10 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f0f0] flex">
+    <div className="min-h-screen bg-[#f0f0f0] flex gap-4 p-4 items-start">
 
-      {/* Pending edits sidebar — desktop left 30% */}
-      <div className="hidden lg:flex flex-col w-[30%] shrink-0 h-screen sticky top-0 bg-white border-r border-gray-200">
+      {/* Pending edits sidebar — desktop left 30%, floating card */}
+      <div className="hidden lg:flex flex-col w-[30%] shrink-0 sticky top-4 rounded-3xl bg-white shadow-sm overflow-hidden max-h-[calc(100vh-2rem)]">
         <PendingEditsPanel
           entries={pendingEdits}
           onDone={handleDone}
@@ -68,8 +68,8 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         />
       </div>
 
-      {/* Main content — 70% */}
-      <div className="flex-1 min-w-0 relative">
+      {/* Main content — territories floating card */}
+      <div className="flex-1 min-w-0 rounded-3xl bg-white shadow-sm overflow-hidden relative">
 
       {/* Top-right actions */}
       <div className="absolute top-5 right-6 flex items-center gap-3 z-10">
@@ -93,7 +93,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         </button>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 pt-16 pb-12">
+      <div className="px-6 pt-16 pb-12">
 
         {/* Title */}
         <div className="text-center mb-10">
@@ -110,7 +110,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               className={`px-8 py-3 rounded-full text-sm font-medium border transition-all ${
                 statusFilter === f.value
                   ? 'bg-gray-900 text-white border-gray-900'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                  : 'bg-[#f0f0f0] text-gray-600 border-transparent hover:border-gray-300'
               }`}
             >
               {f.label}
@@ -132,12 +132,12 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               placeholder="Pesquisar"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full h-14 bg-white border border-gray-200 rounded-full pl-12 pr-5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
+              className="w-full h-14 bg-[#f0f0f0] border border-transparent rounded-full pl-12 pr-5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
             />
           </div>
           <button
             onClick={() => setShowAdd(true)}
-            className="w-14 h-14 shrink-0 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="w-14 h-14 shrink-0 bg-[#f0f0f0] border border-transparent rounded-full flex items-center justify-center hover:bg-gray-200 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-gray-400"
             title="Adicionar território"
           >
             <svg className="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -150,7 +150,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         {loading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="rounded-3xl overflow-hidden bg-white animate-pulse">
+              <div key={i} className="rounded-3xl overflow-hidden bg-[#f0f0f0] animate-pulse">
                 <div className="w-full aspect-[5/3] bg-gray-200" />
                 <div className="px-3 py-2.5 space-y-2">
                   <div className="h-3 bg-gray-200 rounded w-2/3" />
@@ -161,7 +161,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-3 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-[#f0f0f0] flex items-center justify-center">
               <svg className="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
               </svg>
@@ -218,7 +218,7 @@ function TerritoryCard({ territory, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col rounded-3xl overflow-hidden bg-white hover:shadow-lg hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0]"
+      className="group flex flex-col rounded-3xl overflow-hidden bg-[#f0f0f0] hover:bg-[#e8e8e8] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white"
     >
       {/* Image area */}
       <div className="w-full aspect-[5/3] overflow-hidden bg-[#e8e8e8] relative">

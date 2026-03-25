@@ -46,7 +46,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
               <div
                 key={entry.id}
                 className={`rounded-xl border px-4 py-3 transition-all duration-300 ${
-                  done ? 'opacity-40 border-gray-100' : 'border-gray-200 bg-white'
+                  done ? 'opacity-40 border-transparent' : 'border-transparent bg-[#f0f0f0]'
                 }`}
               >
                 <div className={`${done ? 'line-through' : ''}`}>
