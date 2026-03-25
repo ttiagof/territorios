@@ -145,8 +145,12 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
       const blob = await res.blob()
       files.push(new File([blob], `${territoryTitle}-verso.jpg`, { type: 'image/jpeg' }))
     }
-    if (files.length && navigator.canShare?.({ files })) {
-      await navigator.share({ files })
+    if (files.length) {
+      if (navigator.canShare?.({ files })) {
+        await navigator.share({ files })
+      } else if (navigator.share) {
+        await navigator.share({ title: territoryTitle })
+      }
     }
   }
 
@@ -316,14 +320,12 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
                 >
                   ⬇ Baixar cartões
                 </button>
-                {navigator.canShare && (
-                  <button
-                    onClick={shareImages}
-                    className="flex-1 text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
-                  >
-                    ↗ Partilhar
-                  </button>
-                )}
+                <button
+                  onClick={shareImages}
+                  className="flex-1 text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
+                >
+                  ↗ Partilhar
+                </button>
               </div>
             )}
           </div>
