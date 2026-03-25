@@ -188,6 +188,11 @@ function TerritoryCard({ territory, onClick }) {
             )}
           </div>
         )}
+        {isAvailable && territory.return_date && (
+          <div className="mt-0.5">
+            <p className="text-[10px] text-gray-400">disponível desde {formatDate(territory.return_date)}</p>
+          </div>
+        )}
       </div>
     </button>
   )
