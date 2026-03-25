@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
+import { compressImage } from '../lib/imageUtils'
 
 export default function TerritoryHistoryModal({ territory, onClose, onUpdated }) {
   const [history, setHistory] = useState([])
@@ -156,11 +157,11 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
       }
 
       if (frontImageFile) {
-        const ext = frontImageFile.name.split('.').pop()
-        const path = `${territory.id}-front.${ext}`
+        const compressed = await compressImage(frontImageFile)
+        const path = `${territory.id}-front.jpg`
         const { error: uploadError } = await supabase.storage
           .from('territory-cards')
-          .upload(path, frontImageFile, { upsert: true })
+          .upload(path, compressed, { upsert: true, contentType: 'image/jpeg' })
         if (uploadError) throw uploadError
         const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
         updates.card_front_image_url = urlData.publicUrl
@@ -169,11 +170,11 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
       }
 
       if (backImageFile) {
-        const ext = backImageFile.name.split('.').pop()
-        const path = `${territory.id}-back.${ext}`
+        const compressed = await compressImage(backImageFile)
+        const path = `${territory.id}-back.jpg`
         const { error: uploadError } = await supabase.storage
           .from('territory-cards')
-          .upload(path, backImageFile, { upsert: true })
+          .upload(path, compressed, { upsert: true, contentType: 'image/jpeg' })
         if (uploadError) throw uploadError
         const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
         updates.card_back_image_url = urlData.publicUrl

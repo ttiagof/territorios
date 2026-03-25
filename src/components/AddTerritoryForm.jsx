@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { compressImage } from '../lib/imageUtils'
 
 export default function AddTerritoryForm({ onClose, onAdded }) {
   const [form, setForm] = useState({
@@ -33,22 +34,22 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
       let updates = {}
 
       if (frontImageFile) {
-        const ext = frontImageFile.name.split('.').pop()
-        const path = `${data.id}-front.${ext}`
+        const compressed = await compressImage(frontImageFile)
+        const path = `${data.id}-front.jpg`
         const { error: uploadError } = await supabase.storage
           .from('territory-cards')
-          .upload(path, frontImageFile, { upsert: true })
+          .upload(path, compressed, { upsert: true, contentType: 'image/jpeg' })
         if (uploadError) throw uploadError
         const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
         updates.card_front_image_url = urlData.publicUrl
       }
 
       if (backImageFile) {
-        const ext = backImageFile.name.split('.').pop()
-        const path = `${data.id}-back.${ext}`
+        const compressed = await compressImage(backImageFile)
+        const path = `${data.id}-back.jpg`
         const { error: uploadError } = await supabase.storage
           .from('territory-cards')
-          .upload(path, backImageFile, { upsert: true })
+          .upload(path, compressed, { upsert: true, contentType: 'image/jpeg' })
         if (uploadError) throw uploadError
         const { data: urlData } = supabase.storage.from('territory-cards').getPublicUrl(path)
         updates.card_back_image_url = urlData.publicUrl
