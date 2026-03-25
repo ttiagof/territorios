@@ -154,7 +154,7 @@ function TerritoryCard({ territory, onClick }) {
       className="group flex flex-col rounded-3xl overflow-hidden bg-white hover:shadow-lg hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0]"
     >
       {/* Image area */}
-      <div className="w-full aspect-square overflow-hidden bg-[#e8e8e8] relative">
+      <div className="w-full aspect-[5/3] overflow-hidden bg-[#e8e8e8] relative">
         {territory.card_front_image_url ? (
           <img
             src={territory.card_front_image_url}

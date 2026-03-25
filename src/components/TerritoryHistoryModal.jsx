@@ -266,9 +266,9 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated })
                       className={`rounded-xl overflow-hidden bg-gray-100 border border-gray-200 ${src ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''}`}
                     >
                       {src ? (
-                        <img src={src} alt={`${territoryTitle} — ${label}`} className="w-full object-cover aspect-[4/3]" />
+                        <img src={src} alt={`${territoryTitle} — ${label}`} className="w-full object-cover aspect-[5/3]" />
                       ) : (
-                        <div className="aspect-[4/3] flex items-center justify-center text-gray-400 text-xs">Sem imagem</div>
+                        <div className="aspect-[5/3] flex items-center justify-center text-gray-400 text-xs">Sem imagem</div>
                       )}
                     </div>
                     {src && (
