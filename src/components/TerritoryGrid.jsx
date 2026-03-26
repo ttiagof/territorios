@@ -11,6 +11,8 @@ const STATUS_FILTERS = [
   { value: '', label: 'Todos' },
   { value: 'available', label: 'Disponíveis' },
   { value: 'assigned', label: 'Designados' },
+  { value: 'overdue', label: 'Atrasados' },
+  { value: 'due_soon', label: 'Em breve' },
 ]
 
 export default function TerritoryGrid({ territories, setTerritories, loading, onSignOut, user }) {
@@ -37,7 +39,12 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   }
 
   const filtered = territories
-    .filter(t => !statusFilter || t.status === statusFilter)
+    .filter(t => {
+      if (!statusFilter) return true
+      if (statusFilter === 'overdue') return t.status === 'assigned' && t.assigned_date && isOverdue(t.assigned_date)
+      if (statusFilter === 'due_soon') return t.status === 'assigned' && t.assigned_date && isDueSoon(t.assigned_date)
+      return t.status === statusFilter
+    })
     .filter(t => {
       if (!search) return true
       const q = search.toLowerCase()
