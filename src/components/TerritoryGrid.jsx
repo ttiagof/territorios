@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import TerritoryHistoryModal from './TerritoryHistoryModal'
 import AddTerritoryForm from './AddTerritoryForm'
 import PendingEditsPanel from './PendingEditsPanel'
+import ReturnDatesPanel from './ReturnDatesPanel'
 import { formatDate } from '../lib/utils'
 import { supabase } from '../lib/supabase'
 
@@ -18,6 +19,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   const [statusFilter, setStatusFilter] = useState('')
   const [pendingEdits, setPendingEdits] = useState([])
   const [showEdits, setShowEdits] = useState(false)
+  const [showReturns, setShowReturns] = useState(false)
 
   useEffect(() => {
     supabase
@@ -59,13 +61,18 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   return (
     <div className="h-screen bg-[#f0f0f0] flex gap-4 p-4">
 
-      {/* Pending edits sidebar — desktop left 30%, floating card */}
-      <div className="hidden lg:flex flex-col w-[30%] shrink-0 rounded-3xl bg-white shadow-sm overflow-hidden">
-        <PendingEditsPanel
-          entries={pendingEdits}
-          onDone={handleDone}
-          sidebar
-        />
+      {/* Left sidebar — desktop 30% */}
+      <div className="hidden lg:flex flex-col w-[30%] shrink-0 gap-4">
+        <div className="rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col">
+          <PendingEditsPanel
+            entries={pendingEdits}
+            onDone={handleDone}
+            sidebar
+          />
+        </div>
+        <div className="rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
+          <ReturnDatesPanel territories={territories} />
+        </div>
       </div>
 
       {/* Main content */}
@@ -82,6 +89,13 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           )}
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowReturns(true)}
+            className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+            title="Próximas devoluções"
+          >
+            <span>📅</span>
+          </button>
           {pendingEdits.length > 0 && (
             <button
               onClick={() => setShowEdits(true)}
@@ -199,6 +213,14 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           onDone={handleDone}
           onClose={() => setShowEdits(false)}
         />
+      )}
+      {showReturns && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center lg:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowReturns(false)} />
+          <div className="relative bg-white rounded-t-3xl shadow-2xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+            <ReturnDatesPanel territories={territories} onClose={() => setShowReturns(false)} />
+          </div>
+        </div>
       )}
       {showAdd && (
         <AddTerritoryForm
