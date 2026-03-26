@@ -270,7 +270,12 @@ function TerritoryCard({ territory, onClick }) {
 
       {/* Info bar */}
       <div className="px-3 py-2.5">
-        <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
+        <div className="flex items-center justify-between gap-1">
+          <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
+          <span className={`shrink-0 text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${isAvailable ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-500'}`}>
+            {isAvailable ? 'Livre' : 'Designado'}
+          </span>
+        </div>
         {!isAvailable && territory.assigned_to && (
           <div className="mt-0.5">
             <p className="text-xs text-gray-500 truncate">{territory.assigned_to}</p>
