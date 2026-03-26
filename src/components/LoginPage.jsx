@@ -53,8 +53,7 @@ export default function LoginPage() {
                 required
                 value={identifier}
                 onChange={e => setIdentifier(e.target.value)}
-                placeholder="ex: Tiago ou tiago@email.com"
-                className="w-full bg-[#f0f0f0] rounded-xl px-4 py-3 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-500 transition"
+className="w-full bg-[#f0f0f0] rounded-xl px-4 py-3 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-500 transition"
               />
             </div>
             <div>
