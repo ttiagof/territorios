@@ -81,6 +81,11 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       {/* Header */}
       <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
         <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-lg bg-accent-600/10 flex items-center justify-center shrink-0">
+            <svg className="w-3.5 h-3.5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+            </svg>
+          </div>
           <span className="text-sm font-semibold text-gray-900">Territórios</span>
           {territories.length > 0 && (
             <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-2 py-0.5 leading-none">
@@ -275,10 +280,6 @@ function TerritoryCard({ territory, onClick }) {
         )}
         {/* Status indicator dot */}
         <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ring-2 ring-white ${isAvailable ? 'bg-emerald-500' : 'bg-red-500'}`} />
-        {/* Overdue/due-soon left stripe */}
-        {(overdue || dueSoon) && (
-          <div className={`absolute inset-y-0 left-0 w-1 ${overdue ? 'bg-red-500' : 'bg-amber-400'}`} />
-        )}
       </div>
 
       {/* Info bar */}
@@ -286,10 +287,10 @@ function TerritoryCard({ territory, onClick }) {
         <div className="flex items-center justify-between gap-1">
           <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
           <span className={`shrink-0 text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${
-            overdue     ? 'bg-red-100 text-red-600'      :
-            dueSoon     ? 'bg-amber-100 text-amber-600'  :
+            overdue     ? 'bg-amber-100 text-amber-600'     :
+            dueSoon     ? 'bg-amber-100 text-amber-600'     :
             isAvailable ? 'bg-emerald-100 text-emerald-600' :
-                          'bg-red-100 text-red-500'
+                          'bg-accent-200 text-accent-700'
           }`}>
             {overdue ? 'Atrasado' : dueSoon ? 'Em breve' : isAvailable ? 'Livre' : 'Designado'}
           </span>
