@@ -289,9 +289,6 @@ function TerritoryCard({ territory, onClick }) {
             <p className="text-[10px] text-gray-400">desde {formatDate(territory.return_date)}</p>
           </div>
         )}
-        {isAvailable && !territory.return_date && (
-          <p className="text-[10px] text-emerald-500 font-medium mt-0.5">Livre</p>
-        )}
       </div>
     </button>
   )
