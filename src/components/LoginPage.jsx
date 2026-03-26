@@ -17,7 +17,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f0f0f0] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#e8eef5] p-4">
       <div className="w-full max-w-sm">
         {/* Brand mark */}
         <div className="flex flex-col items-center mb-8">
@@ -27,10 +27,10 @@ export default function LoginPage() {
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Territórios</h1>
-          <p className="text-sm text-gray-400 mt-1">Entre com a sua conta para continuar.</p>
+          <p className="text-sm text-gray-500 mt-1">Entre com a sua conta para continuar.</p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm p-8">
+        <div className="bg-white rounded-3xl shadow-md p-8">
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Email</label>

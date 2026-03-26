@@ -3,7 +3,7 @@ import TerritoryHistoryModal from './TerritoryHistoryModal'
 import AddTerritoryForm from './AddTerritoryForm'
 import PendingEditsPanel from './PendingEditsPanel'
 import ReturnDatesPanel from './ReturnDatesPanel'
-import { formatDate } from '../lib/utils'
+import { formatDate, isOverdue, isDueSoon } from '../lib/utils'
 import { supabase } from '../lib/supabase'
 
 const STATUS_FILTERS = [
@@ -243,6 +243,8 @@ function TerritoryCard({ territory, onClick }) {
   const name = territory.name ?? ''
   const number = territory.number ?? ''
   const label = name ? `${name} ${number}` : number
+  const overdue = !isAvailable && territory.assigned_date && isOverdue(territory.assigned_date)
+  const dueSoon = !isAvailable && territory.assigned_date && !overdue && isDueSoon(territory.assigned_date)
 
   return (
     <button
@@ -250,7 +252,13 @@ function TerritoryCard({ territory, onClick }) {
       className="group flex flex-col rounded-2xl overflow-hidden bg-[#f0f0f0] hover:bg-[#e8e8e8] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] cursor-pointer"
     >
       {/* Image area */}
-      <div className="w-full aspect-[4/3] overflow-hidden bg-[#d8d8d8] relative">
+      <div className={`w-full aspect-[4/3] overflow-hidden relative ${
+        territory.card_front_image_url
+          ? 'bg-[#d8d8d8]'
+          : isAvailable
+            ? 'bg-gradient-to-br from-[#ddeaf7] to-[#c8d9ec]'
+            : 'bg-gradient-to-br from-[#e8e8e8] to-[#d4d4d4]'
+      }`}>
         {territory.card_front_image_url ? (
           <img
             src={territory.card_front_image_url}
@@ -258,22 +266,32 @@ function TerritoryCard({ territory, onClick }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <svg className="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-2">
+            <svg className="w-6 h-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
             </svg>
+            <span className="text-lg font-bold text-gray-400 leading-none text-center truncate w-full px-1">{number || label}</span>
           </div>
         )}
         {/* Status indicator dot */}
         <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ring-2 ring-white ${isAvailable ? 'bg-emerald-500' : 'bg-red-500'}`} />
+        {/* Overdue/due-soon left stripe */}
+        {(overdue || dueSoon) && (
+          <div className={`absolute inset-y-0 left-0 w-1 ${overdue ? 'bg-red-500' : 'bg-amber-400'}`} />
+        )}
       </div>
 
       {/* Info bar */}
       <div className="px-3 py-2.5">
         <div className="flex items-center justify-between gap-1">
           <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
-          <span className={`shrink-0 text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${isAvailable ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-500'}`}>
-            {isAvailable ? 'Livre' : 'Designado'}
+          <span className={`shrink-0 text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${
+            overdue     ? 'bg-red-100 text-red-600'      :
+            dueSoon     ? 'bg-amber-100 text-amber-600'  :
+            isAvailable ? 'bg-emerald-100 text-emerald-600' :
+                          'bg-red-100 text-red-500'
+          }`}>
+            {overdue ? 'Atrasado' : dueSoon ? 'Em breve' : isAvailable ? 'Livre' : 'Designado'}
           </span>
         </div>
         {!isAvailable && territory.assigned_to && (

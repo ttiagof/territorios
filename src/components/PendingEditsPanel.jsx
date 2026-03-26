@@ -14,6 +14,11 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
       {/* Header */}
       <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
         <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-lg bg-accent-600/10 flex items-center justify-center shrink-0">
+            <svg className="w-3.5 h-3.5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
+            </svg>
+          </div>
           <span className="text-sm font-semibold text-gray-900">Edições pendentes</span>
           {entries.length > 0 && (
             <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-2 py-0.5 leading-none">
