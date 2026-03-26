@@ -71,7 +71,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
     <div className="h-[100dvh] bg-[#f0f0f0] flex gap-4 p-2 sm:p-4">
 
       {/* Left sidebar — desktop 30% */}
-      <div className="hidden lg:flex flex-col w-[30%] shrink-0 gap-4">
+      <div className="hidden lg:flex flex-col w-[20%] shrink-0 gap-4">
         <div className="rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
           <PendingEditsPanel
             entries={pendingEdits}
