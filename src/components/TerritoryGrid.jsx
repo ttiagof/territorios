@@ -254,10 +254,10 @@ function TerritoryCard({ territory, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col rounded-2xl overflow-hidden bg-[#f0f0f0] hover:bg-[#e8e8e8] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] cursor-pointer"
+      className="group flex flex-col rounded-2xl bg-[#f0f0f0] hover:bg-[#e8e8e8] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] cursor-pointer p-2 pb-0"
     >
-      {/* Image area */}
-      <div className={`w-full aspect-[4/3] overflow-hidden relative ${
+      {/* Image area — inset with own rounded corners */}
+      <div className={`w-full aspect-[4/3] overflow-hidden relative rounded-xl ${
         territory.card_front_image_url
           ? 'bg-[#d8d8d8]'
           : isAvailable
@@ -283,7 +283,7 @@ function TerritoryCard({ territory, onClick }) {
       </div>
 
       {/* Info bar */}
-      <div className="px-3 py-2.5">
+      <div className="px-1 py-2.5">
         <div className="flex items-center justify-between gap-1">
           <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
           <span className={`shrink-0 text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${
