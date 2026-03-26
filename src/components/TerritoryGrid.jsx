@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import TerritoryHistoryModal from './TerritoryHistoryModal'
 import AddTerritoryForm from './AddTerritoryForm'
 import PendingEditsPanel from './PendingEditsPanel'
@@ -24,6 +24,32 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   const [showEdits, setShowEdits] = useState(false)
   const [showReturns, setShowReturns] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [sidebarWidth, setSidebarWidth] = useState(20)
+  const containerRef = useRef(null)
+  const isDragging = useRef(false)
+
+  useEffect(() => {
+    function onMove(clientX) {
+      if (!isDragging.current || !containerRef.current) return
+      const rect = containerRef.current.getBoundingClientRect()
+      const pct = ((clientX - rect.left) / rect.width) * 100
+      setSidebarWidth(Math.min(35, Math.max(12, pct)))
+    }
+    function onMouseMove(e) { onMove(e.clientX) }
+    function onTouchMove(e) { onMove(e.touches[0].clientX) }
+    function stopDrag() { isDragging.current = false }
+
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', stopDrag)
+    document.addEventListener('touchmove', onTouchMove, { passive: true })
+    document.addEventListener('touchend', stopDrag)
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', stopDrag)
+      document.removeEventListener('touchmove', onTouchMove)
+      document.removeEventListener('touchend', stopDrag)
+    }
+  }, [])
 
   useEffect(() => {
     supabase
@@ -68,10 +94,13 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   }
 
   return (
-    <div className="h-[100dvh] bg-[#f0f0f0] flex gap-4 p-2 sm:p-4">
+    <div ref={containerRef} className="h-[100dvh] bg-[#f0f0f0] flex p-2 sm:p-4 gap-0">
 
-      {/* Left sidebar — desktop 30% */}
-      <div className="hidden lg:flex flex-col w-[20%] shrink-0 gap-4">
+      {/* Left sidebar — resizable on desktop */}
+      <div
+        className="hidden lg:flex flex-col shrink-0 gap-4 pr-2"
+        style={{ width: `${sidebarWidth}%` }}
+      >
         <div className="rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
           <PendingEditsPanel
             entries={pendingEdits}
@@ -84,8 +113,17 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         </div>
       </div>
 
+      {/* Drag handle — desktop only */}
+      <div
+        className="hidden lg:flex items-center justify-center w-3 shrink-0 cursor-col-resize group select-none"
+        onMouseDown={e => { isDragging.current = true; e.preventDefault() }}
+        onTouchStart={() => { isDragging.current = true }}
+      >
+        <div className="w-0.5 h-10 rounded-full bg-gray-300 group-hover:bg-accent-400 group-active:bg-accent-500 transition-colors" />
+      </div>
+
       {/* Main content */}
-      <div className="flex-1 min-w-0 rounded-2xl sm:rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col">
+      <div className="flex-1 min-w-0 rounded-2xl sm:rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col ml-2">
 
       {/* Header */}
       <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
