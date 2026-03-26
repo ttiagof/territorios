@@ -287,10 +287,10 @@ function TerritoryCard({ territory, onClick }) {
         <div className="flex items-center justify-between gap-1">
           <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
           <span className={`shrink-0 text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${
-            overdue     ? 'bg-amber-100 text-amber-600'     :
-            dueSoon     ? 'bg-amber-100 text-amber-600'     :
-            isAvailable ? 'bg-emerald-100 text-emerald-600' :
-                          'bg-accent-200 text-accent-700'
+            overdue     ? 'bg-red-100 text-red-500'          :
+            dueSoon     ? 'bg-amber-100 text-amber-500'     :
+            isAvailable ? 'bg-emerald-100 text-emerald-500' :
+                          'bg-accent-200 text-accent-600'
           }`}>
             {overdue ? 'Atrasado' : dueSoon ? 'Em breve' : isAvailable ? 'Livre' : 'Designado'}
           </span>
