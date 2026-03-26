@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { supabase } from '../lib/supabase'
 import { compressImage } from '../lib/imageUtils'
-import { formatDate } from '../lib/utils'
+import { formatDate, isOverdue, isDueSoon } from '../lib/utils'
 import ImageDropZone from './ImageDropZone'
 
 export default function TerritoryHistoryModal({ territory, onClose, onUpdated, onPendingEdit }) {
@@ -46,6 +46,8 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
   }
 
   const isAvailable = territory.status === 'available'
+  const overdue = !isAvailable && territory.assigned_date && isOverdue(territory.assigned_date)
+  const dueSoon = !isAvailable && territory.assigned_date && !overdue && isDueSoon(territory.assigned_date)
   const territoryTitle = territory.name
     ? `${territory.name} ${territory.number}`
     : territory.number
@@ -290,9 +292,12 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
             <div className="flex items-center gap-2.5">
               <span className="text-base font-semibold text-gray-900">{territoryTitle}</span>
               <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                isAvailable ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'
+                isAvailable ? 'bg-emerald-50 text-emerald-600' :
+                overdue     ? 'bg-red-50 text-red-500'         :
+                dueSoon     ? 'bg-amber-50 text-amber-500'     :
+                              'bg-accent-200 text-accent-600'
               }`}>
-                {isAvailable ? 'Disponível' : 'Designado'}
+                {isAvailable ? 'Disponível' : overdue ? 'Atrasado' : dueSoon ? 'Em breve' : 'Designado'}
               </span>
             </div>
             {!isAvailable && territory.assigned_to && (
