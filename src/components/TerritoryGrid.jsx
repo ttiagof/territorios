@@ -279,7 +279,12 @@ function TerritoryCard({ territory, onClick }) {
           </div>
         )}
         {/* Status indicator dot */}
-        <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ring-2 ring-white ${isAvailable ? 'bg-emerald-500' : 'bg-red-500'}`} />
+        <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ring-2 ring-white ${
+          isAvailable ? 'bg-emerald-500' :
+          overdue     ? 'bg-red-500'     :
+          dueSoon     ? 'bg-amber-400'   :
+                        'bg-accent-500'
+        }`} />
       </div>
 
       {/* Info bar */}
