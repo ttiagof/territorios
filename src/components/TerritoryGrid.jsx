@@ -83,7 +83,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">Territórios</span>
           {territories.length > 0 && (
-            <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-2 py-0.5 leading-none">
+            <span className="text-xs font-semibold bg-indigo-600 text-white rounded-full px-2 py-0.5 leading-none">
               {territories.length}
             </span>
           )}
@@ -91,25 +91,29 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowReturns(true)}
-            className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+            className="lg:hidden w-8 h-8 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
             title="Próximas devoluções"
           >
-            <span>📅</span>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+            </svg>
           </button>
           {pendingEdits.length > 0 && (
             <button
               onClick={() => setShowEdits(true)}
-              className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+              className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
             >
-              <span>✎</span>
-              <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-1.5 py-0.5 leading-none">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
+              </svg>
+              <span className="text-xs font-semibold bg-indigo-600 text-white rounded-full px-1.5 py-0.5 leading-none">
                 {pendingEdits.length}
               </span>
             </button>
           )}
           <button
             onClick={onSignOut}
-            className="text-xs font-medium text-gray-400 hover:text-gray-700 transition-colors bg-[#f0f0f0] hover:bg-gray-200 px-3 py-1.5 rounded-full"
+            className="text-xs font-medium text-gray-400 hover:text-gray-700 transition-colors bg-[#f0f0f0] hover:bg-gray-200 px-3 py-1.5 rounded-full cursor-pointer"
           >
             Sair
           </button>
@@ -119,15 +123,15 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       <div className="flex-1 overflow-y-auto px-6 pt-4 pb-6">
 
         {/* Filter pills */}
-        <div className="flex justify-start gap-3 mb-5">
+        <div className="flex justify-start gap-2 mb-5">
           {STATUS_FILTERS.map(f => (
             <button
               key={f.value}
               onClick={() => setStatusFilter(f.value)}
-              className={`px-8 py-3 rounded-full text-sm font-medium border transition-all ${
+              className={`px-5 py-2 rounded-full text-sm font-medium border transition-all duration-200 cursor-pointer ${
                 statusFilter === f.value
-                  ? 'bg-gray-900 text-white border-gray-900'
-                  : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-200'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
               {f.label}
@@ -139,7 +143,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         <div className="flex gap-3 mb-6">
           <div className="relative flex-1">
             <svg
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
@@ -149,15 +153,15 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               placeholder="Pesquisar"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full h-14 bg-[#f0f0f0] border border-transparent rounded-full pl-12 pr-5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
+              className="w-full h-12 bg-[#f0f0f0] border border-transparent rounded-full pl-11 pr-5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition"
             />
           </div>
           <button
             onClick={() => setShowAdd(true)}
-            className="w-14 h-14 shrink-0 bg-[#f0f0f0] border border-transparent rounded-full flex items-center justify-center hover:bg-gray-200 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="w-12 h-12 shrink-0 bg-indigo-600 hover:bg-indigo-700 rounded-full flex items-center justify-center active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-sm shadow-indigo-200 cursor-pointer"
             title="Adicionar território"
           >
-            <svg className="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </button>
@@ -243,7 +247,7 @@ function TerritoryCard({ territory, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col rounded-2xl overflow-hidden bg-[#e8e8e8] hover:bg-[#dcdcdc] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0]"
+      className="group flex flex-col rounded-2xl overflow-hidden bg-[#f0f0f0] hover:bg-[#e8e8e8] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] cursor-pointer"
     >
       {/* Image area */}
       <div className="w-full aspect-[4/3] overflow-hidden bg-[#d8d8d8] relative">
@@ -260,18 +264,13 @@ function TerritoryCard({ territory, onClick }) {
             </svg>
           </div>
         )}
+        {/* Status indicator dot */}
+        <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ring-2 ring-white ${isAvailable ? 'bg-emerald-500' : 'bg-red-500'}`} />
       </div>
 
       {/* Info bar */}
       <div className="px-3 py-2.5">
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
-          <span className={`shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-            isAvailable ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'
-          }`}>
-            {isAvailable ? 'Livre' : 'Ocupado'}
-          </span>
-        </div>
+        <p className="text-sm font-semibold text-gray-900 truncate leading-tight">{label}</p>
         {!isAvailable && territory.assigned_to && (
           <div className="mt-0.5">
             <p className="text-xs text-gray-500 truncate">{territory.assigned_to}</p>
@@ -282,11 +281,13 @@ function TerritoryCard({ territory, onClick }) {
         )}
         {isAvailable && territory.return_date && (
           <div className="mt-0.5">
-            <p className="text-[10px] text-gray-400">disponível desde {formatDate(territory.return_date)}</p>
+            <p className="text-[10px] text-gray-400">desde {formatDate(territory.return_date)}</p>
           </div>
+        )}
+        {isAvailable && !territory.return_date && (
+          <p className="text-[10px] text-emerald-500 font-medium mt-0.5">Livre</p>
         )}
       </div>
     </button>
   )
 }
-

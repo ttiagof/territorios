@@ -76,9 +76,11 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
           <h2 className="text-base font-semibold text-gray-900">Novo território</h2>
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 text-sm transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
           >
-            ✕
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
@@ -113,7 +115,7 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
               value={form.notes}
               onChange={handleField}
               rows={3}
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-black/10"
+              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
             />
           </div>
 
@@ -123,14 +125,14 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
             <button
               type="button"
               onClick={onClose}
-              className="text-sm px-4 py-2.5 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 font-medium transition-colors"
+              className="text-sm px-4 py-2.5 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 font-medium transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="text-sm px-4 py-2.5 rounded-xl bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 font-semibold transition-colors"
+              className="text-sm px-4 py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
             >
               {saving ? 'Salvando...' : 'Adicionar'}
             </button>
@@ -151,7 +153,7 @@ function FormField({ label, name, value, onChange, type = 'text', placeholder = 
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
+        className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
       />
     </div>
   )

@@ -16,7 +16,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">Edições pendentes</span>
           {entries.length > 0 && (
-            <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-2 py-0.5 leading-none">
+            <span className="text-xs font-semibold bg-indigo-600 text-white rounded-full px-2 py-0.5 leading-none">
               {entries.length}
             </span>
           )}
@@ -24,9 +24,11 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
         {!sidebar && (
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 text-sm transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
           >
-            ✕
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
           </button>
         )}
       </div>
@@ -55,7 +57,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
               >
                 <div className={done ? 'line-through' : ''}>
                   <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${
-                    isAssign ? 'text-gray-500' : 'text-red-400'
+                    isAssign ? 'text-indigo-500' : 'text-red-400'
                   }`}>
                     {isAssign ? 'Designar' : 'Entregar'}
                   </p>
@@ -67,9 +69,12 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
                 {!done && (
                   <button
                     onClick={() => markDone(entry.id)}
-                    className="mt-2.5 w-full text-xs py-1.5 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors font-semibold"
+                    className="mt-2.5 w-full text-xs py-1.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    ✓ Feito
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    Feito
                   </button>
                 )}
               </div>

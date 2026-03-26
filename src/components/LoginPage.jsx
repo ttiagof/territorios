@@ -18,40 +18,65 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f0f0f0] p-4">
-      <div className="bg-white rounded-3xl shadow-sm p-8 w-full max-w-sm">
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight mb-1">Territórios</h1>
-        <p className="text-sm text-gray-400 mb-8">Entre com a sua conta para continuar.</p>
+      <div className="w-full max-w-sm">
+        {/* Brand mark */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center mb-4 shadow-lg shadow-indigo-200">
+            <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Territórios</h1>
+          <p className="text-sm text-gray-400 mt-1">Entre com a sua conta para continuar.</p>
+        </div>
 
-        <form onSubmit={handleLogin} className="space-y-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Email</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Senha</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
-            />
-          </div>
-          {error && <p className="text-xs text-red-500">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-40 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors mt-2"
-          >
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
+        <div className="bg-white rounded-3xl shadow-sm p-8">
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Email</label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="w-full bg-[#f0f0f0] rounded-xl px-4 py-3 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Senha</label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="w-full bg-[#f0f0f0] rounded-xl px-4 py-3 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              />
+            </div>
+            {error && (
+              <div className="flex items-center gap-2 bg-red-50 text-red-600 text-xs font-medium px-3 py-2.5 rounded-xl">
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
+                {error}
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm transition-colors cursor-pointer mt-1 flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Entrando...
+                </>
+              ) : 'Entrar'}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )

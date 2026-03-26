@@ -261,9 +261,11 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
       >
         <button
           onClick={() => setLightboxSrc(null)}
-          className="absolute top-4 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"
+          className="absolute top-4 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
         >
-          ✕
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
         </button>
         <img
           src={lightboxSrc}
@@ -302,10 +304,12 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                       <span> · desde {formatDate(territory.assigned_date)}</span>
                       <button
                         onClick={() => { setEditAssignedDate(territory.assigned_date); setShowEditAssignedDate(true) }}
-                        className="ml-1.5 text-gray-300 hover:text-gray-500 transition-colors text-xs leading-none align-middle"
+                        className="ml-1.5 text-gray-300 hover:text-indigo-500 transition-colors leading-none align-middle inline-flex cursor-pointer"
                         title="Editar data"
                       >
-                        ✎
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
+                        </svg>
                       </button>
                     </>
                   )}
@@ -316,13 +320,13 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                       type="date"
                       value={editAssignedDate}
                       onChange={e => setEditAssignedDate(e.target.value)}
-                      className="bg-[#f0f0f0] rounded-lg px-2 py-1 text-xs border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
+                      className="bg-[#f0f0f0] rounded-lg px-2 py-1 text-xs border-0 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                       autoFocus
                     />
                     <button
                       type="submit"
                       disabled={saving}
-                      className="text-xs px-2.5 py-1 rounded-lg bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 font-semibold transition-colors"
+                      className="text-xs px-2.5 py-1 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
                     >
                       {saving ? '...' : 'Salvar'}
                     </button>
@@ -340,9 +344,11 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
           </div>
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 text-sm transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
           >
-            ✕
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
@@ -369,10 +375,12 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                     {src && (
                       <button
                         onClick={e => { e.stopPropagation(); downloadOne(src, `${territoryTitle}-${suffix}.jpg`) }}
-                        className="absolute top-2 right-2 bg-black/40 hover:bg-black/60 text-white rounded-lg px-2 py-1 text-xs leading-none transition-colors"
+                        className="absolute top-2 right-2 bg-black/40 hover:bg-black/60 text-white rounded-lg p-1.5 transition-colors cursor-pointer"
                         title={`Baixar ${label}`}
                       >
-                        ⬇
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
                       </button>
                     )}
                   </div>
@@ -384,16 +392,22 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
               <div className="mt-2.5 flex gap-2">
                 <button
                   onClick={downloadBoth}
-                  className="flex-1 text-sm py-2 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 transition-colors font-medium"
+                  className="flex-1 text-sm py-2 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 transition-colors font-medium flex items-center justify-center gap-1.5 cursor-pointer"
                 >
-                  ⬇ Baixar cartões
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                  Baixar cartões
                 </button>
                 {navigator.canShare && (
                   <button
                     onClick={shareImages}
-                    className="flex-1 text-sm py-2 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 transition-colors font-medium"
+                    className="flex-1 text-sm py-2 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 transition-colors font-medium flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    ↗ Partilhar
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                    </svg>
+                    Partilhar
                   </button>
                 )}
               </div>
@@ -418,7 +432,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   <input
                     value={editForm.name}
                     onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
+                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   />
                 </div>
                 <div>
@@ -426,7 +440,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   <input
                     value={editForm.number}
                     onChange={e => setEditForm(f => ({ ...f, number: e.target.value }))}
-                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
+                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   />
                 </div>
               </div>
@@ -452,7 +466,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   value={editForm.notes}
                   onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
                   rows={2}
-                  className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-black/10"
+                  className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
               <div className="flex justify-end gap-2">
@@ -465,7 +479,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                 <button
                   onClick={handleSaveEdit}
                   disabled={saving}
-                  className="text-sm px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 font-semibold transition-colors"
+                  className="text-sm px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
                 >
                   {saving ? 'Salvando...' : 'Salvar'}
                 </button>
@@ -474,7 +488,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
           ) : (
             <button
               onClick={() => setShowEditForm(true)}
-              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-xs text-indigo-500 hover:text-indigo-700 transition-colors font-medium cursor-pointer"
             >
               Editar território →
             </button>
@@ -509,18 +523,22 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                         </button>
                         <button
                           onClick={() => setPendingDeleteId(null)}
-                          className="text-gray-400 hover:text-gray-600 text-sm leading-none"
+                          className="text-gray-400 hover:text-gray-600 leading-none cursor-pointer"
                         >
-                          ✕
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                          </svg>
                         </button>
                       </div>
                     ) : (
                       <button
                         onClick={() => setPendingDeleteId(entry.id)}
-                        className="shrink-0 ml-2 text-gray-300 hover:text-red-400 transition-colors text-sm leading-none mt-0.5"
+                        className="shrink-0 ml-2 text-gray-300 hover:text-red-400 transition-colors leading-none mt-0.5 cursor-pointer"
                         title="Remover"
                       >
-                        ✕
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
                       </button>
                     )}
                   </div>
@@ -539,7 +557,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   <input
                     value={assignForm.person_name}
                     onChange={e => setAssignForm(f => ({ ...f, person_name: e.target.value }))}
-                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
+                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   />
                 </div>
                 <div>
@@ -548,7 +566,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                     type="date"
                     value={assignForm.assigned_date}
                     onChange={e => setAssignForm(f => ({ ...f, assigned_date: e.target.value }))}
-                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
+                    className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   />
                 </div>
               </div>
@@ -563,7 +581,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                 <button
                   type="submit"
                   disabled={saving}
-                  className="text-sm px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 font-semibold transition-colors"
+                  className="text-sm px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
                 >
                   {saving ? 'Salvando...' : 'Confirmar'}
                 </button>
@@ -583,7 +601,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   type="date"
                   value={returnDate}
                   onChange={e => setReturnDate(e.target.value)}
-                  className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
+                  className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
               <div className="flex justify-end gap-2">
@@ -613,7 +631,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
           {isAvailable && !showAssignForm && (
             <button
               onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
-              className="text-sm px-5 py-2.5 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors font-semibold"
+              className="text-sm px-5 py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors font-semibold cursor-pointer"
             >
               Atribuir
             </button>

@@ -24,7 +24,7 @@ export default function ReturnDatesPanel({ territories, onClose }) {
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">Próximas devoluções</span>
           {assigned.length > 0 && (
-            <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-2 py-0.5 leading-none">
+            <span className="text-xs font-semibold bg-indigo-600 text-white rounded-full px-2 py-0.5 leading-none">
               {assigned.length}
             </span>
           )}
@@ -33,7 +33,7 @@ export default function ReturnDatesPanel({ territories, onClose }) {
           {overdueCount > 0 && (
             <button
               onClick={() => setShowOverdue(true)}
-              className="text-[11px] font-semibold text-red-500 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-full transition-colors"
+              className="text-[11px] font-semibold text-red-500 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-full transition-colors cursor-pointer"
             >
               {overdueCount} atrasado{overdueCount !== 1 ? 's' : ''}
             </button>
@@ -41,9 +41,11 @@ export default function ReturnDatesPanel({ territories, onClose }) {
           {onClose && (
             <button
               onClick={onClose}
-              className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 text-sm transition-colors"
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
             >
-              ✕
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
             </button>
           )}
         </div>
