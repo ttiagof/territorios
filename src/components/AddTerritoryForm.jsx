@@ -67,12 +67,16 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-3xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-t-3xl sm:rounded-3xl shadow-xl w-full sm:max-w-md max-h-[92dvh] sm:max-h-[90vh] overflow-y-auto overscroll-contain flex flex-col"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-0 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-gray-200" />
+        </div>
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100 shrink-0">
           <h2 className="text-base font-semibold text-gray-900">Novo território</h2>
           <button
             onClick={onClose}
@@ -84,7 +88,7 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <form onSubmit={handleSubmit} className="px-4 sm:px-6 py-4 sm:py-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <FormField label="Nome" name="name" value={form.name} onChange={handleField} placeholder="Ex: Rodeio" />
             <FormField label="Número *" name="number" value={form.number} onChange={handleField} placeholder="Ex: 36" />
@@ -121,20 +125,20 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
 
           {error && <p className="text-xs text-red-500">{error}</p>}
 
-          <div className="flex justify-end gap-2 pt-1">
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-sm px-4 py-2.5 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 font-medium transition-colors cursor-pointer"
-            >
-              Cancelar
-            </button>
+          <div className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-1 pb-safe sm:pb-0">
             <button
               type="submit"
               disabled={saving}
-              className="text-sm px-4 py-2.5 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
+              className="w-full sm:w-auto text-sm px-4 py-3 sm:py-2.5 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
             >
               {saving ? 'Salvando...' : 'Adicionar'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full sm:w-auto text-sm px-4 py-3 sm:py-2.5 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 font-medium transition-colors cursor-pointer"
+            >
+              Cancelar
             </button>
           </div>
         </form>

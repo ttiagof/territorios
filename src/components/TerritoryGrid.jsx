@@ -68,7 +68,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   }
 
   return (
-    <div className="h-screen bg-[#f0f0f0] flex gap-4 p-4">
+    <div className="h-[100dvh] bg-[#f0f0f0] flex gap-4 p-2 sm:p-4">
 
       {/* Left sidebar — desktop 30% */}
       <div className="hidden lg:flex flex-col w-[30%] shrink-0 gap-4">
@@ -85,7 +85,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       </div>
 
       {/* Main content */}
-      <div className="flex-1 min-w-0 rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col">
+      <div className="flex-1 min-w-0 rounded-2xl sm:rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col">
 
       {/* Header */}
       <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
@@ -138,15 +138,15 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-6 pt-4 pb-6">
+      <div className="flex-1 overflow-y-auto px-3 sm:px-6 pt-4 pb-6 overscroll-contain">
 
         {/* Filter pills */}
-        <div className="flex justify-start gap-2 mb-5">
+        <div className="flex gap-2 mb-4 sm:mb-5 overflow-x-auto no-scrollbar -mx-3 sm:-mx-6 px-3 sm:px-6 pb-1">
           {STATUS_FILTERS.map(f => (
             <button
               key={f.value}
               onClick={() => setStatusFilter(f.value)}
-              className={`px-5 py-2 rounded-full text-sm font-medium border transition-all duration-200 cursor-pointer ${
+              className={`shrink-0 px-4 sm:px-5 py-2 rounded-full text-sm font-medium border transition-all duration-200 cursor-pointer ${
                 statusFilter === f.value
                   ? 'bg-accent-600 text-white border-accent-600 shadow-sm shadow-accent-200'
                   : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
@@ -158,7 +158,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         </div>
 
         {/* Search + Add */}
-        <div className="flex gap-3 mb-6">
+        <div className="flex gap-3 mb-4 sm:mb-6">
           <div className="relative flex-1">
             <svg
               className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
@@ -239,7 +239,10 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       {showReturns && (
         <div className="fixed inset-0 z-50 flex items-end justify-center lg:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setShowReturns(false)} />
-          <div className="relative bg-white rounded-t-3xl shadow-2xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+          <div className="relative bg-white rounded-t-3xl shadow-2xl w-full max-h-[85dvh] flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom)]">
+            <div className="flex justify-center pt-3 pb-0 shrink-0">
+              <div className="w-10 h-1 rounded-full bg-gray-200" />
+            </div>
             <ReturnDatesPanel territories={territories} onClose={() => setShowReturns(false)} />
           </div>
         </div>

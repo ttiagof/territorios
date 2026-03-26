@@ -56,13 +56,17 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40" onClick={onClose}>
       <div
-        className="bg-white rounded-3xl shadow-xl w-full max-w-sm flex flex-col overflow-hidden"
+        className="bg-white rounded-t-3xl sm:rounded-3xl shadow-xl w-full sm:max-w-sm flex flex-col overflow-hidden max-h-[92dvh] sm:max-h-[90vh]"
         onClick={e => e.stopPropagation()}
       >
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-0 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-gray-200" />
+        </div>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100 shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-lg bg-accent-600/10 flex items-center justify-center shrink-0">
               <svg className="w-3.5 h-3.5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -82,7 +86,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
           </button>
         </div>
 
-        <div className="overflow-y-auto px-6 py-5 space-y-6">
+        <div className="overflow-y-auto overscroll-contain px-4 sm:px-6 py-4 sm:py-5 space-y-5 sm:space-y-6 pb-safe sm:pb-5">
           {/* Account info */}
           <div className="flex items-center gap-3 bg-[#f0f0f0] rounded-2xl px-4 py-3">
             <div className="w-9 h-9 rounded-full bg-accent-600 flex items-center justify-center shrink-0">

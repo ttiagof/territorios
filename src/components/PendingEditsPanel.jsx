@@ -97,10 +97,16 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-40 bg-black/20" onClick={onClose} />
-      {/* Panel */}
-      <div className="fixed top-0 right-0 h-full w-80 max-w-full bg-white shadow-2xl z-50 flex flex-col">
+      <div className="fixed inset-0 z-40 bg-black/30" onClick={onClose} />
+      {/* Panel — bottom sheet on mobile, right panel on sm+ */}
+      <div className="fixed bottom-0 left-0 right-0 sm:top-0 sm:bottom-auto sm:left-auto sm:right-0 sm:h-full sm:w-80 bg-white rounded-t-3xl sm:rounded-none shadow-2xl z-50 flex flex-col max-h-[85dvh] sm:max-h-full">
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-0 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-gray-200" />
+        </div>
         {content}
+        {/* Safe area spacer — mobile only */}
+        <div className="sm:hidden h-[env(safe-area-inset-bottom)] shrink-0" />
       </div>
     </>
   )

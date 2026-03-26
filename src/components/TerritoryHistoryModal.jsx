@@ -279,15 +279,19 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
     )}
 
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-3xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-t-3xl sm:rounded-3xl shadow-xl w-full sm:max-w-lg max-h-[92dvh] sm:max-h-[90vh] overflow-y-auto overscroll-contain flex flex-col"
         onClick={e => e.stopPropagation()}
       >
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-0 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-gray-200" />
+        </div>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100 shrink-0">
           <div>
             <div className="flex items-center gap-2.5">
               <span className="text-base font-semibold text-gray-900">{territoryTitle}</span>
@@ -357,7 +361,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
           </button>
         </div>
 
-        <div className="px-6 py-5 space-y-5">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5">
           {/* Card images */}
           <div>
             <div className="grid grid-cols-2 gap-3">
@@ -431,7 +435,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
           {showEditForm ? (
             <div className="bg-[#f0f0f0] rounded-2xl p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900">Editar território</h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">Nome</label>
                   <input
@@ -474,19 +478,19 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-accent-400"
                 />
               </div>
-              <div className="flex justify-end gap-2">
-                <button
-                  onClick={() => { setShowEditForm(false); setFrontImageFile(null); setBackImageFile(null) }}
-                  className="text-sm px-4 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
-                >
-                  Cancelar
-                </button>
+              <div className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-1">
                 <button
                   onClick={handleSaveEdit}
                   disabled={saving}
-                  className="text-sm px-4 py-2 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
+                  className="w-full sm:w-auto text-sm px-4 py-2.5 sm:py-2 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
                 >
                   {saving ? 'Salvando...' : 'Salvar'}
+                </button>
+                <button
+                  onClick={() => { setShowEditForm(false); setFrontImageFile(null); setBackImageFile(null) }}
+                  className="w-full sm:w-auto text-sm px-4 py-2.5 sm:py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
+                >
+                  Cancelar
                 </button>
               </div>
             </div>
@@ -556,7 +560,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
           {showAssignForm && (
             <form onSubmit={handleAssign} className="bg-[#f0f0f0] rounded-2xl p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-900">Atribuir território</h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">Nome da pessoa</label>
                   <input
@@ -575,20 +579,20 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   />
                 </div>
               </div>
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => { setShowAssignForm(false); setError(null) }}
-                  className="text-sm px-4 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
-                >
-                  Cancelar
-                </button>
+              <div className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-1">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="text-sm px-4 py-2 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
+                  className="w-full sm:w-auto text-sm px-4 py-2.5 sm:py-2 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
                 >
                   {saving ? 'Salvando...' : 'Confirmar'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowAssignForm(false); setError(null) }}
+                  className="w-full sm:w-auto text-sm px-4 py-2.5 sm:py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
+                >
+                  Cancelar
                 </button>
               </div>
             </form>
@@ -606,23 +610,23 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   type="date"
                   value={returnDate}
                   onChange={e => setReturnDate(e.target.value)}
-                  className="w-full bg-white rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+                  className="w-full bg-white rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
                 />
               </div>
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => { setShowReturnForm(false); setError(null) }}
-                  className="text-sm px-4 py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
-                >
-                  Cancelar
-                </button>
+              <div className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-1">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="text-sm px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 disabled:opacity-40 font-semibold transition-colors"
+                  className="w-full sm:w-auto text-sm px-4 py-2.5 sm:py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 disabled:opacity-40 font-semibold transition-colors"
                 >
                   {saving ? 'Salvando...' : 'Confirmar entrega'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowReturnForm(false); setError(null) }}
+                  className="w-full sm:w-auto text-sm px-4 py-2.5 sm:py-2 rounded-xl bg-white text-gray-600 hover:bg-gray-100 font-medium transition-colors"
+                >
+                  Cancelar
                 </button>
               </div>
             </form>
@@ -632,11 +636,11 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
         </div>
 
         {/* Footer actions */}
-        <div className="px-6 pb-6 pt-4 border-t border-gray-100 flex gap-2 justify-end">
+        <div className="px-4 sm:px-6 pb-safe sm:pb-6 pt-4 border-t border-gray-100 flex flex-col sm:flex-row gap-2 sm:justify-end shrink-0">
           {isAvailable && !showAssignForm && (
             <button
               onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
-              className="text-sm px-5 py-2.5 rounded-xl bg-accent-600 text-white hover:bg-accent-700 transition-colors font-semibold cursor-pointer"
+              className="w-full sm:w-auto text-sm px-5 py-3 sm:py-2.5 rounded-xl bg-accent-600 text-white hover:bg-accent-700 transition-colors font-semibold cursor-pointer"
             >
               Atribuir
             </button>
@@ -644,7 +648,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
           {!isAvailable && !showReturnForm && (
             <button
               onClick={() => { setShowReturnForm(true); setShowAssignForm(false); setError(null) }}
-              className="text-sm px-5 py-2.5 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors font-semibold"
+              className="w-full sm:w-auto text-sm px-5 py-3 sm:py-2.5 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors font-semibold"
             >
               Entregar
             </button>
