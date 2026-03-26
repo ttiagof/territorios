@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import TerritoryHistoryModal from './TerritoryHistoryModal'
 import AddTerritoryForm from './AddTerritoryForm'
 import PendingEditsPanel from './PendingEditsPanel'
@@ -26,14 +26,36 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   const [showSettings, setShowSettings] = useState(false)
   const [sidebarWidth, setSidebarWidth] = useState(20)
   const containerRef = useRef(null)
+  const sidebarRef = useRef(null)
   const isDragging = useRef(false)
+  const minSidebarPx = useRef(200)
+
+  // After each width change, detect if panel headers are cramping (text wrapping
+  // causes scrollHeight > clientHeight on fixed-height h-14 elements).
+  // If cramped, record the true minimum and snap back to it.
+  useLayoutEffect(() => {
+    if (!sidebarRef.current) return
+    const headers = sidebarRef.current.querySelectorAll('.h-14')
+    let cramped = false
+    headers.forEach(h => {
+      if (h.scrollHeight > h.clientHeight + 1) cramped = true
+    })
+    if (cramped) {
+      const currentPx = sidebarRef.current.offsetWidth
+      minSidebarPx.current = currentPx + 16
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect()
+        setSidebarWidth((minSidebarPx.current / rect.width) * 100)
+      }
+    }
+  }, [sidebarWidth])
 
   useEffect(() => {
     function onMove(clientX) {
       if (!isDragging.current || !containerRef.current) return
       const rect = containerRef.current.getBoundingClientRect()
       const pct = ((clientX - rect.left) / rect.width) * 100
-      const minPct = (200 / rect.width) * 100
+      const minPct = (minSidebarPx.current / rect.width) * 100
       setSidebarWidth(Math.min(35, Math.max(minPct, pct)))
     }
     function onMouseMove(e) { onMove(e.clientX) }
@@ -99,6 +121,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
 
       {/* Left sidebar — resizable on desktop */}
       <div
+        ref={sidebarRef}
         className="hidden lg:flex flex-col shrink-0 gap-4 pr-2"
         style={{ width: `${sidebarWidth}%` }}
       >
