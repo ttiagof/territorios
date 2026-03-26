@@ -65,6 +65,7 @@ export default function App() {
       setTerritories={setTerritories}
       loading={loadingData}
       onSignOut={() => supabase.auth.signOut()}
+      user={session?.user}
     />
   )
 }
