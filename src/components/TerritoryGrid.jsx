@@ -115,14 +115,12 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           {pendingEdits.length > 0 && (
             <button
               onClick={() => setShowEdits(true)}
-              className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
+              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
+              title="Edições pendentes"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
               </svg>
-              <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-1.5 py-0.5 leading-none">
-                {pendingEdits.length}
-              </span>
             </button>
           )}
           <button
