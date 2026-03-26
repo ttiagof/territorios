@@ -12,7 +12,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
   const content = (
     <>
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
+      <div className="flex items-center justify-between px-5 min-h-[6.5rem] border-b border-gray-100 shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">Edições pendentes</span>
           {entries.length > 0 && (

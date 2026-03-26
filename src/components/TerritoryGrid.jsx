@@ -79,47 +79,45 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       <div className="flex-1 min-w-0 rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col">
 
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-gray-900">Territórios</span>
-          {territories.length > 0 && (
-            <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-2 py-0.5 leading-none">
-              {territories.length}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowReturns(true)}
-            className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
-            title="Próximas devoluções"
-          >
-            <span>📅</span>
-          </button>
-          {pendingEdits.length > 0 && (
-            <button
-              onClick={() => setShowEdits(true)}
-              className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
-            >
-              <span>✎</span>
-              <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-1.5 py-0.5 leading-none">
-                {pendingEdits.length}
+      <div className="px-5 pt-4 pb-3 border-b border-gray-100 shrink-0">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-gray-900">Territórios</span>
+            {territories.length > 0 && (
+              <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-2 py-0.5 leading-none">
+                {territories.length}
               </span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowReturns(true)}
+              className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+              title="Próximas devoluções"
+            >
+              <span>📅</span>
             </button>
-          )}
-          <button
-            onClick={onSignOut}
-            className="text-xs font-medium text-gray-400 hover:text-gray-700 transition-colors bg-[#f0f0f0] hover:bg-gray-200 px-3 py-1.5 rounded-full"
-          >
-            Sair
-          </button>
+            {pendingEdits.length > 0 && (
+              <button
+                onClick={() => setShowEdits(true)}
+                className="lg:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+              >
+                <span>✎</span>
+                <span className="text-xs font-semibold bg-gray-900 text-white rounded-full px-1.5 py-0.5 leading-none">
+                  {pendingEdits.length}
+                </span>
+              </button>
+            )}
+            <button
+              onClick={onSignOut}
+              className="text-xs font-medium text-gray-400 hover:text-gray-700 transition-colors bg-[#f0f0f0] hover:bg-gray-200 px-3 py-1.5 rounded-full"
+            >
+              Sair
+            </button>
+          </div>
         </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-6 pt-4 pb-6">
-
         {/* Filter pills */}
-        <div className="flex justify-start gap-3 mb-5">
+        <div className="flex justify-start gap-3">
           {STATUS_FILTERS.map(f => (
             <button
               key={f.value}
@@ -134,6 +132,9 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-6 pt-4 pb-6">
 
         {/* Search + Add */}
         <div className="flex gap-3 mb-6">
