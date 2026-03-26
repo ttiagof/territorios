@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -11,8 +11,22 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setError(error.message)
+
+    let email = identifier.trim()
+
+    // If not an email, look up by display name
+    if (!email.includes('@')) {
+      const { data, error: rpcError } = await supabase.rpc('get_email_by_display_name', { p_name: email })
+      if (rpcError || !data) {
+        setError('Utilizador não encontrado.')
+        setLoading(false)
+        return
+      }
+      email = data
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    if (signInError) setError('Email/nome ou password incorretos.')
     setLoading(false)
   }
 
@@ -33,12 +47,13 @@ export default function LoginPage() {
         <div className="bg-white rounded-3xl shadow-md p-8">
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Email</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Email ou nome</label>
               <input
-                type="email"
+                type="text"
                 required
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                value={identifier}
+                onChange={e => setIdentifier(e.target.value)}
+                placeholder="ex: Tiago ou tiago@email.com"
                 className="w-full bg-[#f0f0f0] rounded-xl px-4 py-3 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-500 transition"
               />
             </div>
