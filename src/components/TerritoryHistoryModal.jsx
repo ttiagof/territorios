@@ -20,6 +20,8 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
   const [backPreview, setBackPreview] = useState(territory.card_back_image_url ?? null)
   const [lightboxSrc, setLightboxSrc] = useState(null)
   const [pendingDeleteId, setPendingDeleteId] = useState(null)
+  const [showEditAssignedDate, setShowEditAssignedDate] = useState(false)
+  const [editAssignedDate, setEditAssignedDate] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -126,6 +128,27 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
       const editEntry = { type: 'deliver', territory_name: territoryTitle, person_name: territory.assigned_to, date: returnDate }
       const { data: editData } = await supabase.from('pending_edits').insert(editEntry).select().single()
       if (editData) onPendingEdit(editData)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleUpdateAssignedDate(e) {
+    e.preventDefault()
+    if (!editAssignedDate) { setError('Data obrigatória.'); return }
+    setSaving(true)
+    setError(null)
+    try {
+      const { data: updated } = await supabase
+        .from('territories')
+        .update({ assigned_date: editAssignedDate })
+        .eq('id', territory.id)
+        .select()
+        .single()
+      onUpdated(updated)
+      setShowEditAssignedDate(false)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -271,12 +294,48 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
               </span>
             </div>
             {!isAvailable && territory.assigned_to && (
-              <p className="text-sm text-gray-400 mt-0.5">
-                Com <span className="font-medium text-gray-600">{territory.assigned_to}</span>
-                {territory.assigned_date && (
-                  <span> · desde {formatDate(territory.assigned_date)}</span>
+              <div className="mt-0.5">
+                <p className="text-sm text-gray-400">
+                  Com <span className="font-medium text-gray-600">{territory.assigned_to}</span>
+                  {territory.assigned_date && !showEditAssignedDate && (
+                    <>
+                      <span> · desde {formatDate(territory.assigned_date)}</span>
+                      <button
+                        onClick={() => { setEditAssignedDate(territory.assigned_date); setShowEditAssignedDate(true) }}
+                        className="ml-1.5 text-gray-300 hover:text-gray-500 transition-colors text-xs leading-none align-middle"
+                        title="Editar data"
+                      >
+                        ✎
+                      </button>
+                    </>
+                  )}
+                </p>
+                {showEditAssignedDate && (
+                  <form onSubmit={handleUpdateAssignedDate} className="flex items-center gap-2 mt-1.5">
+                    <input
+                      type="date"
+                      value={editAssignedDate}
+                      onChange={e => setEditAssignedDate(e.target.value)}
+                      className="bg-[#f0f0f0] rounded-lg px-2 py-1 text-xs border-0 focus:outline-none focus:ring-2 focus:ring-black/10"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      disabled={saving}
+                      className="text-xs px-2.5 py-1 rounded-lg bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 font-semibold transition-colors"
+                    >
+                      {saving ? '...' : 'Salvar'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setShowEditAssignedDate(false); setError(null) }}
+                      className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                  </form>
                 )}
-              </p>
+              </div>
             )}
           </div>
           <button
