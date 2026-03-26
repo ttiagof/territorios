@@ -33,7 +33,8 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       if (!isDragging.current || !containerRef.current) return
       const rect = containerRef.current.getBoundingClientRect()
       const pct = ((clientX - rect.left) / rect.width) * 100
-      setSidebarWidth(Math.min(35, Math.max(12, pct)))
+      const minPct = (200 / rect.width) * 100
+      setSidebarWidth(Math.min(35, Math.max(minPct, pct)))
     }
     function onMouseMove(e) { onMove(e.clientX) }
     function onTouchMove(e) { onMove(e.touches[0].clientX) }
