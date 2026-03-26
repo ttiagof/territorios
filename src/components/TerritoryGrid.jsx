@@ -24,7 +24,10 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
   const [showEdits, setShowEdits] = useState(false)
   const [showReturns, setShowReturns] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
-  const [sidebarWidth, setSidebarWidth] = useState(20)
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    const saved = localStorage.getItem('sidebarWidth')
+    return saved ? parseFloat(saved) : 20
+  })
   const containerRef = useRef(null)
   const sidebarRef = useRef(null)
   const isDragging = useRef(false)
@@ -60,7 +63,16 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
     }
     function onMouseMove(e) { onMove(e.clientX) }
     function onTouchMove(e) { onMove(e.touches[0].clientX) }
-    function stopDrag() { isDragging.current = false }
+    function stopDrag() {
+      isDragging.current = false
+      // Save after drag ends so we don't hammer localStorage on every pixel
+      if (containerRef.current) {
+        setSidebarWidth(prev => {
+          localStorage.setItem('sidebarWidth', String(prev))
+          return prev
+        })
+      }
+    }
 
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('mouseup', stopDrag)
@@ -122,7 +134,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       {/* Left sidebar — resizable on desktop */}
       <div
         ref={sidebarRef}
-        className="hidden lg:flex flex-col shrink-0 gap-4 pr-2"
+        className="hidden lg:flex flex-col shrink-0 gap-4"
         style={{ width: `${sidebarWidth}%` }}
       >
         <div className="rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
@@ -137,17 +149,17 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         </div>
       </div>
 
-      {/* Drag handle — desktop only */}
+      {/* Drag handle — desktop only, sits in the gap between sidebar and main */}
       <div
-        className="hidden lg:flex items-center justify-center w-3 shrink-0 cursor-col-resize group select-none"
+        className="hidden lg:flex items-center justify-center w-4 shrink-0 cursor-col-resize group select-none"
         onMouseDown={e => { isDragging.current = true; e.preventDefault() }}
         onTouchStart={() => { isDragging.current = true }}
       >
-        <div className="w-0.5 h-10 rounded-full bg-gray-300 group-hover:bg-accent-400 group-active:bg-accent-500 transition-colors" />
+        <div className="w-px h-8 rounded-full bg-gray-300 group-hover:bg-accent-400 group-active:bg-accent-500 transition-colors" />
       </div>
 
       {/* Main content */}
-      <div className="flex-1 min-w-0 rounded-2xl sm:rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col ml-2">
+      <div className="flex-1 min-w-0 rounded-2xl sm:rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col">
 
       {/* Header */}
       <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
