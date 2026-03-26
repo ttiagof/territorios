@@ -80,7 +80,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           />
         </div>
         <div className="rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
-          <ReturnDatesPanel territories={territories} />
+          <ReturnDatesPanel territories={territories} onSelect={t => setSelected(t)} />
         </div>
       </div>
 
@@ -241,7 +241,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
             <div className="flex justify-center pt-3 pb-0 shrink-0">
               <div className="w-10 h-1 rounded-full bg-gray-200" />
             </div>
-            <ReturnDatesPanel territories={territories} onClose={() => setShowReturns(false)} />
+            <ReturnDatesPanel territories={territories} onClose={() => setShowReturns(false)} onSelect={t => { setShowReturns(false); setSelected(t) }} />
           </div>
         </div>
       )}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { formatDate, getReturnDate, isOverdue, isDueSoon } from '../lib/utils'
 import OverdueModal from './OverdueModal'
 
-export default function ReturnDatesPanel({ territories, onClose }) {
+export default function ReturnDatesPanel({ territories, onClose, onSelect }) {
   const [showOverdue, setShowOverdue] = useState(false)
 
   const assigned = territories
@@ -86,7 +86,11 @@ export default function ReturnDatesPanel({ territories, onClose }) {
             }
 
             return (
-              <div key={t.id} className={`rounded-2xl px-4 py-3 ${bgClass}`}>
+              <button
+                key={t.id}
+                onClick={() => onSelect?.(t)}
+                className={`w-full text-left rounded-2xl px-4 py-3 transition-opacity active:opacity-70 ${bgClass} ${onSelect ? 'cursor-pointer hover:brightness-95' : ''}`}
+              >
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-semibold text-gray-900 truncate">{label}</p>
                   {badgeEl}
@@ -95,7 +99,7 @@ export default function ReturnDatesPanel({ territories, onClose }) {
                 <p className={`text-[10px] mt-0.5 ${dateClass}`}>
                   Devolução: {formatDate(t.returnDate)}
                 </p>
-              </div>
+              </button>
             )
           })
         )}
