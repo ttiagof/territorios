@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-accent-200: #c4d9ef;
+  --color-accent-400: #7aaed9;
+  --color-accent-500: #6b9ed4;
+  --color-accent-600: #5b8ec9;
+  --color-accent-700: #4a7db8;
+}
+
 * {
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -115,7 +115,7 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
               value={form.notes}
               onChange={handleField}
               rows={3}
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-accent-400 transition"
             />
           </div>
 
@@ -132,7 +132,7 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
             <button
               type="submit"
               disabled={saving}
-              className="text-sm px-4 py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
+              className="text-sm px-4 py-2.5 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
             >
               {saving ? 'Salvando...' : 'Adicionar'}
             </button>
@@ -153,7 +153,7 @@ function FormField({ label, name, value, onChange, type = 'text', placeholder = 
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+        className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400 transition"
       />
     </div>
   )

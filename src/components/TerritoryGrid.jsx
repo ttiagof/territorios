@@ -79,11 +79,11 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       <div className="flex-1 min-w-0 rounded-3xl bg-white shadow-sm overflow-hidden flex flex-col">
 
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
+      <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">Territórios</span>
           {territories.length > 0 && (
-            <span className="text-xs font-semibold bg-indigo-600 text-white rounded-full px-2 py-0.5 leading-none">
+            <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-2 py-0.5 leading-none">
               {territories.length}
             </span>
           )}
@@ -106,7 +106,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
               </svg>
-              <span className="text-xs font-semibold bg-indigo-600 text-white rounded-full px-1.5 py-0.5 leading-none">
+              <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-1.5 py-0.5 leading-none">
                 {pendingEdits.length}
               </span>
             </button>
@@ -130,7 +130,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               onClick={() => setStatusFilter(f.value)}
               className={`px-5 py-2 rounded-full text-sm font-medium border transition-all duration-200 cursor-pointer ${
                 statusFilter === f.value
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-200'
+                  ? 'bg-accent-600 text-white border-accent-600 shadow-sm shadow-accent-200'
                   : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -153,12 +153,12 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               placeholder="Pesquisar"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full h-12 bg-[#f0f0f0] border border-transparent rounded-full pl-11 pr-5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition"
+              className="w-full h-12 bg-[#f0f0f0] border border-transparent rounded-full pl-11 pr-5 text-sm focus:outline-none focus:ring-2 focus:ring-accent-400 focus:border-transparent transition"
             />
           </div>
           <button
             onClick={() => setShowAdd(true)}
-            className="w-12 h-12 shrink-0 bg-indigo-600 hover:bg-indigo-700 rounded-full flex items-center justify-center active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-sm shadow-indigo-200 cursor-pointer"
+            className="w-12 h-12 shrink-0 bg-accent-600 hover:bg-accent-700 rounded-full flex items-center justify-center active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 shadow-sm shadow-accent-200 cursor-pointer"
             title="Adicionar território"
           >
             <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -247,7 +247,7 @@ function TerritoryCard({ territory, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col rounded-2xl overflow-hidden bg-[#f0f0f0] hover:bg-[#e8e8e8] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] cursor-pointer"
+      className="group flex flex-col rounded-2xl overflow-hidden bg-[#f0f0f0] hover:bg-[#e8e8e8] hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] cursor-pointer"
     >
       {/* Image area */}
       <div className="w-full aspect-[4/3] overflow-hidden bg-[#d8d8d8] relative">

@@ -20,11 +20,11 @@ export default function ReturnDatesPanel({ territories, onClose }) {
   return (
     <>
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
+      <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-900">Próximas devoluções</span>
           {assigned.length > 0 && (
-            <span className="text-xs font-semibold bg-indigo-600 text-white rounded-full px-2 py-0.5 leading-none">
+            <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-2 py-0.5 leading-none">
               {assigned.length}
             </span>
           )}
