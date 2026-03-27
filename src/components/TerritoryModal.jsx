@@ -119,7 +119,7 @@ export default function TerritoryModal({ territory, onClose, onSaved }) {
           <div>
             <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Observações</label>
             {editing
-              ? <textarea name="notes" value={form.notes ?? ''} onChange={handleField} rows={3} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-400" />
+              ? <textarea name="notes" value={form.notes ?? ''} onChange={handleField} rows={3} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent-400" />
               : <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{form.notes || <span className="text-gray-400 dark:text-gray-500 italic">Sem observações</span>}</p>
             }
           </div>
@@ -140,9 +140,9 @@ export default function TerritoryModal({ territory, onClose, onSaved }) {
             {editing
               ? <>
                   <button onClick={() => { setEditing(false); setForm({ ...territory }); setImagePreview(territory.card_image_url); setImageFile(null) }} className="text-sm px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancelar</button>
-                  <button onClick={handleSave} disabled={saving} className="text-sm px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 disabled:opacity-50 transition-colors">{saving ? 'Salvando...' : 'Salvar'}</button>
+                  <button onClick={handleSave} disabled={saving} className="text-sm px-4 py-2 rounded-lg bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-50 transition-colors">{saving ? 'Salvando...' : 'Salvar'}</button>
                 </>
-              : <button onClick={() => setEditing(true)} className="text-sm px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 transition-colors">Editar</button>
+              : <button onClick={() => setEditing(true)} className="text-sm px-4 py-2 rounded-lg bg-accent-600 text-white hover:bg-accent-700 transition-colors">Editar</button>
             }
           </div>
         </div>
@@ -156,7 +156,7 @@ function Field({ label, name, value, editing, onChange, type = 'text' }) {
     <div>
       <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{label}</label>
       {editing
-        ? <input type={type} name={name} value={value} onChange={onChange} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400" />
+        ? <input type={type} name={name} value={value} onChange={onChange} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent-400" />
         : <p className="text-sm text-gray-800 dark:text-gray-200">{value || <span className="text-gray-400 dark:text-gray-500 italic">—</span>}</p>
       }
     </div>

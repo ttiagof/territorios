@@ -3,11 +3,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-accent-200: #e5e5e5;
-  --color-accent-400: #a3a3a3;
-  --color-accent-500: #525252;
-  --color-accent-600: #171717;
-  --color-accent-700: #0a0a0a;
+  --color-accent-200: #c4d9ef;
+  --color-accent-400: #7aaed9;
+  --color-accent-500: #6b9ed4;
+  --color-accent-600: #5b8ec9;
+  --color-accent-700: #4a7db8;
 }
 
 * {
