@@ -43,11 +43,11 @@ export default function TerritoryTable({ territories, setTerritories }) {
   const columns = useMemo(() => [
     columnHelper.accessor('number', {
       header: 'Nº',
-      cell: info => <span className="font-medium text-gray-900">{info.getValue()}</span>,
+      cell: info => <span className="font-medium text-gray-900 dark:text-gray-100">{info.getValue()}</span>,
     }),
     columnHelper.accessor('assigned_to', {
       header: 'Designado a',
-      cell: info => info.getValue() || <span className="text-gray-400 italic">—</span>,
+      cell: info => info.getValue() || <span className="text-gray-400 dark:text-gray-500 italic">—</span>,
     }),
     columnHelper.accessor('assigned_date', {
       header: 'Designação',
@@ -84,24 +84,24 @@ export default function TerritoryTable({ territories, setTerritories }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Top bar */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between gap-4">
-        <h1 className="text-xl font-semibold text-gray-900 shrink-0">Territórios</h1>
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between gap-4">
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100 shrink-0">Territórios</h1>
         <div className="flex items-center gap-3 flex-1 max-w-xl">
           <input
             type="text"
             placeholder="Buscar por número ou nome..."
             value={globalFilter}
             onChange={e => setGlobalFilter(e.target.value)}
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
           />
           <div className="flex gap-1 shrink-0">
             {STATUS_FILTERS.map(f => (
               <button
                 key={f.value}
                 onClick={() => setStatusFilter(f.value)}
-                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${statusFilter === f.value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${statusFilter === f.value ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'}`}
               >
                 {f.label}
               </button>
@@ -110,7 +110,7 @@ export default function TerritoryTable({ territories, setTerritories }) {
         </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="shrink-0 bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="shrink-0 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-300 transition-colors"
         >
           + Adicionar
         </button>
@@ -118,16 +118,16 @@ export default function TerritoryTable({ territories, setTerritories }) {
 
       {/* Table */}
       <div className="p-6">
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
               {table.getHeaderGroups().map(hg => (
                 <tr key={hg.id}>
                   {hg.headers.map(h => (
                     <th
                       key={h.id}
                       onClick={h.column.getToggleSortingHandler()}
-                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-gray-700"
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer select-none hover:text-gray-700 dark:hover:text-gray-200"
                     >
                       {flexRender(h.column.columnDef.header, h.getContext())}
                       {h.column.getIsSorted() === 'asc' ? ' ↑' : h.column.getIsSorted() === 'desc' ? ' ↓' : ''}
@@ -136,20 +136,20 @@ export default function TerritoryTable({ territories, setTerritories }) {
                 </tr>
               ))}
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {table.getRowModel().rows.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="text-center py-12 text-gray-400 text-sm">Nenhum território encontrado.</td>
+                  <td colSpan={5} className="text-center py-12 text-gray-400 dark:text-gray-500 text-sm">Nenhum território encontrado.</td>
                 </tr>
               )}
               {table.getRowModel().rows.map(row => (
                 <tr
                   key={row.id}
                   onClick={() => setSelected(row.original)}
-                  className="hover:bg-blue-50 cursor-pointer transition-colors"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer transition-colors"
                 >
                   {row.getVisibleCells().map(cell => (
-                    <td key={cell.id} className="px-4 py-3 text-gray-700">
+                    <td key={cell.id} className="px-4 py-3 text-gray-700 dark:text-gray-300">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -158,7 +158,7 @@ export default function TerritoryTable({ territories, setTerritories }) {
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-gray-400 mt-2 text-right">{filtered.length} território(s)</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 text-right">{filtered.length} território(s)</p>
       </div>
 
       {selected && (
@@ -179,7 +179,7 @@ export default function TerritoryTable({ territories, setTerritories }) {
 }
 
 function formatDate(val) {
-  if (!val) return <span className="text-gray-400 italic">—</span>
+  if (!val) return <span className="text-gray-400 dark:text-gray-500 italic">—</span>
   const [y, m, d] = val.split('-')
   return `${d}/${m}/${y}`
 }

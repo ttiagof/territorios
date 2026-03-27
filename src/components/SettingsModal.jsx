@@ -68,8 +68,8 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-accent-600/10 flex items-center justify-center shrink-0">
-              <svg className="w-3.5 h-3.5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="w-6 h-6 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+              <svg className="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               </svg>
@@ -89,8 +89,8 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
         <div className="overflow-y-auto overscroll-contain px-4 sm:px-6 py-4 sm:py-5 space-y-5 sm:space-y-6 pb-safe sm:pb-5">
           {/* Account info */}
           <div className="flex items-center gap-3 bg-[#f0f0f0] dark:bg-gray-800 rounded-2xl px-4 py-3">
-            <div className="w-9 h-9 rounded-full bg-accent-600 flex items-center justify-center shrink-0">
-              <span className="text-sm font-bold text-white">
+            <div className="w-9 h-9 rounded-full bg-gray-900 dark:bg-gray-100 flex items-center justify-center shrink-0">
+              <span className="text-sm font-bold text-white dark:text-gray-900">
                 {(currentName || email).charAt(0).toUpperCase()}
               </span>
             </div>
@@ -108,7 +108,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="O teu nome"
-              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
             {nameMsg && (
               <p className={`text-xs ${nameMsg.type === 'ok' ? 'text-emerald-500' : 'text-red-500'}`}>{nameMsg.text}</p>
@@ -116,7 +116,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
             <button
               type="submit"
               disabled={savingName || name.trim() === currentName}
-              className="w-full py-2 rounded-xl bg-accent-600 hover:bg-accent-700 text-white text-sm font-semibold transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-default"
+              className="w-full py-2 rounded-xl bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-300 text-white dark:text-gray-900 text-sm font-semibold transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-default"
             >
               {savingName ? 'A guardar…' : 'Guardar nome'}
             </button>
@@ -133,7 +133,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
               onChange={e => setCurrentPassword(e.target.value)}
               placeholder="Password atual"
               required
-              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
             <input
               type="password"
@@ -141,7 +141,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
               onChange={e => setNewPassword(e.target.value)}
               placeholder="Nova password"
               required
-              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
             <input
               type="password"
@@ -149,7 +149,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
               onChange={e => setConfirmPassword(e.target.value)}
               placeholder="Confirmar nova password"
               required
-              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
             {passwordMsg && (
               <p className={`text-xs ${passwordMsg.type === 'ok' ? 'text-emerald-500' : 'text-red-500'}`}>{passwordMsg.text}</p>
@@ -157,7 +157,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
             <button
               type="submit"
               disabled={savingPassword || !currentPassword || !newPassword || !confirmPassword}
-              className="w-full py-2 rounded-xl bg-accent-600 hover:bg-accent-700 text-white text-sm font-semibold transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-default"
+              className="w-full py-2 rounded-xl bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-300 text-white dark:text-gray-900 text-sm font-semibold transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-default"
             >
               {savingPassword ? 'A atualizar…' : 'Atualizar password'}
             </button>

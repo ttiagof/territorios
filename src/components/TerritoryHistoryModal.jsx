@@ -345,7 +345,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   <input
                     value={editForm.name}
                     onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                    className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+                    className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
                   />
                 </div>
                 <div>
@@ -353,7 +353,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   <input
                     value={editForm.number}
                     onChange={e => setEditForm(f => ({ ...f, number: e.target.value }))}
-                    className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+                    className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
                   />
                 </div>
               </div>
@@ -379,7 +379,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                   value={editForm.notes}
                   onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
                   rows={3}
-                  className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-accent-400"
+                  className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
               </div>
               {error && <p className="text-xs text-red-500">{error}</p>}
@@ -390,7 +390,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
               <button
                 onClick={handleSaveEdit}
                 disabled={saving}
-                className="w-full sm:w-auto text-sm px-5 py-3 sm:py-2.5 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
+                className="w-full sm:w-auto text-sm px-5 py-3 sm:py-2.5 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
               >
                 {saving ? 'Salvando...' : 'Salvar'}
               </button>
@@ -414,7 +414,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                     isAvailable ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' :
                     overdue     ? 'bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400'         :
                     dueSoon     ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-500 dark:text-amber-400'     :
-                                  'bg-accent-200 dark:bg-accent-700/30 text-accent-600 dark:text-accent-400'
+                                  'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                   }`}>
                     {isAvailable ? 'Disponível' : overdue ? 'Atrasado' : dueSoon ? 'Em breve' : 'Designado'}
                   </span>
@@ -428,7 +428,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                           <span> · desde {formatDate(territory.assigned_date)}</span>
                           <button
                             onClick={() => { setEditAssignedDate(territory.assigned_date); setShowEditAssignedDate(true) }}
-                            className="ml-1.5 text-gray-300 hover:text-accent-500 transition-colors leading-none align-middle inline-flex cursor-pointer"
+                            className="ml-1.5 text-gray-300 hover:text-gray-600 dark:hover:text-gray-300 transition-colors leading-none align-middle inline-flex cursor-pointer"
                             title="Editar data"
                           >
                             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -444,13 +444,13 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                           type="date"
                           value={editAssignedDate}
                           onChange={e => setEditAssignedDate(e.target.value)}
-                          className="bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-2 py-1 text-xs border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+                          className="bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-2 py-1 text-xs border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
                           autoFocus
                         />
                         <button
                           type="submit"
                           disabled={saving}
-                          className="text-xs px-2.5 py-1 rounded-lg bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
+                          className="text-xs px-2.5 py-1 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
                         >
                           {saving ? '...' : 'Salvar'}
                         </button>
@@ -610,7 +610,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                       <input
                         value={assignForm.person_name}
                         onChange={e => setAssignForm(f => ({ ...f, person_name: e.target.value }))}
-                        className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+                        className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
                       />
                     </div>
                     <div>
@@ -619,7 +619,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                         type="date"
                         value={assignForm.assigned_date}
                         onChange={e => setAssignForm(f => ({ ...f, assigned_date: e.target.value }))}
-                        className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+                        className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
                       />
                     </div>
                   </div>
@@ -627,7 +627,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                     <button
                       type="submit"
                       disabled={saving}
-                      className="w-full sm:w-auto text-sm px-4 py-2.5 sm:py-2 rounded-xl bg-accent-600 text-white hover:bg-accent-700 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
+                      className="w-full sm:w-auto text-sm px-4 py-2.5 sm:py-2 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 disabled:opacity-40 font-semibold transition-colors cursor-pointer"
                     >
                       {saving ? 'Salvando...' : 'Confirmar'}
                     </button>
@@ -654,7 +654,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                       type="date"
                       value={returnDate}
                       onChange={e => setReturnDate(e.target.value)}
-                      className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+                      className="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-gray-400"
                     />
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-1">
@@ -694,7 +694,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
                 {isAvailable && !showAssignForm && (
                   <button
                     onClick={() => { setShowAssignForm(true); setShowReturnForm(false); setError(null) }}
-                    className="text-sm px-5 py-2.5 rounded-xl bg-accent-600 text-white hover:bg-accent-700 transition-colors font-semibold cursor-pointer"
+                    className="text-sm px-5 py-2.5 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 transition-colors font-semibold cursor-pointer"
                   >
                     Atribuir
                   </button>

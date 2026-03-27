@@ -2,7 +2,7 @@
   "name": "Territórios",
   "short_name": "Territórios",
   "description": "Gestão de territórios da congregação",
-  "theme_color": "#5b8ec9",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/territorios/",

@@ -29,7 +29,7 @@ export default function ReturnDatesPanel({ territories, onClose, onSelect }) {
           </div>
           <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Próximas devoluções</span>
           {assigned.length > 0 && (
-            <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-2 py-0.5 leading-none">
+            <span className="text-xs font-semibold bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-full px-2 py-0.5 leading-none">
               {assigned.length}
             </span>
           )}
@@ -89,7 +89,7 @@ export default function ReturnDatesPanel({ territories, onClose, onSelect }) {
               <button
                 key={t.id}
                 onClick={() => onSelect?.(t)}
-                className={`w-full text-left rounded-2xl px-4 py-3 transition-opacity active:opacity-70 ${bgClass} ${onSelect ? 'cursor-pointer hover:brightness-95' : ''}`}
+                className={`w-full text-left rounded-2xl px-4 py-3 transition-opacity active:opacity-70 ${bgClass} ${onSelect ? 'cursor-pointer hover:opacity-80 dark:hover:opacity-80' : ''}`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{label}</p>

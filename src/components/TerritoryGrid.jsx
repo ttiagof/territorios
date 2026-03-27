@@ -161,7 +161,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
         onMouseDown={e => { isDragging.current = true; e.preventDefault() }}
         onTouchStart={() => { isDragging.current = true }}
       >
-        <div className="w-px h-8 rounded-full bg-gray-300 dark:bg-gray-700 group-hover:bg-accent-400 group-active:bg-accent-500 transition-colors" />
+        <div className="w-px h-8 rounded-full bg-gray-300 dark:bg-gray-700 group-hover:bg-gray-400 group-active:bg-gray-500 transition-colors" />
       </div>
 
       {/* Main content */}
@@ -170,14 +170,14 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
       {/* Header */}
       <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 dark:border-gray-800 shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-accent-600/10 flex items-center justify-center shrink-0">
-            <svg className="w-3.5 h-3.5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <div className="w-6 h-6 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+            <svg className="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
             </svg>
           </div>
           <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Territórios</span>
           {territories.length > 0 && (
-            <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-2 py-0.5 leading-none">
+            <span className="text-xs font-semibold bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-full px-2 py-0.5 leading-none">
               {territories.length}
             </span>
           )}
@@ -241,7 +241,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               onClick={() => setStatusFilter(f.value)}
               className={`shrink-0 px-4 sm:px-5 py-2 rounded-full text-sm font-medium border transition-all duration-200 cursor-pointer ${
                 statusFilter === f.value
-                  ? 'bg-accent-600 text-white border-accent-600 shadow-sm shadow-accent-200'
+                  ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-gray-900 dark:border-gray-100 shadow-sm'
                   : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
@@ -264,15 +264,15 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
               placeholder="Pesquisar"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full h-12 bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-transparent rounded-full pl-11 pr-5 text-sm focus:outline-none focus:ring-2 focus:ring-accent-400 focus:border-transparent transition"
+              className="w-full h-12 bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-transparent rounded-full pl-11 pr-5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
             />
           </div>
           <button
             onClick={() => setShowAdd(true)}
-            className="w-12 h-12 shrink-0 bg-accent-600 hover:bg-accent-700 rounded-full flex items-center justify-center active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 shadow-sm shadow-accent-200 cursor-pointer"
+            className="w-12 h-12 shrink-0 bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-300 rounded-full flex items-center justify-center active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 shadow-sm cursor-pointer"
             title="Adicionar território"
           >
-            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="w-5 h-5 text-white dark:text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </button>
@@ -370,14 +370,14 @@ function TerritoryCard({ territory, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col rounded-2xl bg-[#f0f0f0] dark:bg-gray-800 hover:bg-[#e8e8e8] dark:hover:bg-gray-750 hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] dark:focus:ring-offset-gray-950 cursor-pointer p-2 pb-0"
+      className="group flex flex-col rounded-2xl bg-[#f0f0f0] dark:bg-gray-800 hover:bg-[#e8e8e8] dark:hover:bg-gray-750 hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] dark:focus:ring-offset-gray-950 cursor-pointer p-2 pb-0"
     >
       {/* Image area — inset with own rounded corners */}
       <div className={`w-full aspect-[4/3] overflow-hidden relative rounded-xl ${
         territory.card_front_image_url
           ? 'bg-[#d8d8d8] dark:bg-gray-700'
           : isAvailable
-            ? 'bg-gradient-to-br from-[#ddeaf7] to-[#c8d9ec] dark:from-blue-900/40 dark:to-blue-800/30'
+            ? 'bg-gradient-to-br from-[#e8e8e8] to-[#dcdcdc] dark:from-gray-700 dark:to-gray-600'
             : 'bg-gradient-to-br from-[#e8e8e8] to-[#d4d4d4] dark:from-gray-700 dark:to-gray-600'
       }`}>
         {territory.card_front_image_url ? (
@@ -399,7 +399,7 @@ function TerritoryCard({ territory, onClick }) {
           isAvailable ? 'bg-emerald-500' :
           overdue     ? 'bg-red-500'     :
           dueSoon     ? 'bg-amber-400'   :
-                        'bg-accent-500'
+                        'bg-gray-400 dark:bg-gray-500'
         }`} />
       </div>
 
@@ -411,7 +411,7 @@ function TerritoryCard({ territory, onClick }) {
             overdue     ? 'bg-red-100 dark:bg-red-900/40 text-red-500 dark:text-red-400'                   :
             dueSoon     ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-500 dark:text-amber-400'           :
             isAvailable ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-500 dark:text-emerald-400'   :
-                          'bg-accent-200 dark:bg-accent-700/30 text-accent-600 dark:text-accent-400'
+                          'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
           }`}>
             {overdue ? 'Atrasado' : dueSoon ? 'Em breve' : isAvailable ? 'Livre' : 'Designado'}
           </span>

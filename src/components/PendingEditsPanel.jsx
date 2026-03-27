@@ -14,14 +14,14 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
       {/* Header */}
       <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 dark:border-gray-800 shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-accent-600/10 flex items-center justify-center shrink-0">
-            <svg className="w-3.5 h-3.5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <div className="w-6 h-6 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
+            <svg className="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
             </svg>
           </div>
           <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Edições pendentes</span>
           {entries.length > 0 && (
-            <span className="text-xs font-semibold bg-accent-600 text-white rounded-full px-2 py-0.5 leading-none">
+            <span className="text-xs font-semibold bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-full px-2 py-0.5 leading-none">
               {entries.length}
             </span>
           )}
@@ -62,7 +62,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
               >
                 <div className={done ? 'line-through' : ''}>
                   <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${
-                    isAssign ? 'text-accent-500' : 'text-red-400'
+                    isAssign ? 'text-gray-500' : 'text-red-400'
                   }`}>
                     {isAssign ? 'Designar' : 'Entregar'}
                   </p>
@@ -74,7 +74,7 @@ export default function PendingEditsPanel({ entries, onDone, onClose, sidebar })
                 {!done && (
                   <button
                     onClick={() => markDone(entry.id)}
-                    className="mt-2.5 w-full text-xs py-1.5 rounded-xl bg-accent-600 text-white hover:bg-accent-700 transition-colors font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="mt-2.5 w-full text-xs py-1.5 rounded-xl bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 transition-colors font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />

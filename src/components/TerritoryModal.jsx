@@ -71,31 +71,31 @@ export default function TerritoryModal({ territory, onClose, onSaved }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-semibold text-gray-900">Território #{form.number}</span>
+            <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">Território #{form.number}</span>
             <StatusBadge status={form.status} />
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+          <button onClick={onClose} className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-xl leading-none">✕</button>
         </div>
 
         <div className="px-6 py-4 space-y-4">
           {/* Card image */}
-          <div className="rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+          <div className="rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             {imagePreview
               ? <img src={imagePreview} alt={`Território ${form.number}`} className="w-full object-contain max-h-64" />
-              : <div className="h-40 flex items-center justify-center text-gray-400 text-sm">Sem imagem</div>
+              : <div className="h-40 flex items-center justify-center text-gray-400 dark:text-gray-500 text-sm">Sem imagem</div>
             }
           </div>
 
           {editing && (
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Imagem do cartão</label>
-              <input type="file" accept="image/*" onChange={handleImageChange} className="text-sm text-gray-600" />
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Imagem do cartão</label>
+              <input type="file" accept="image/*" onChange={handleImageChange} className="text-sm text-gray-600 dark:text-gray-400" />
             </div>
           )}
 
@@ -103,9 +103,9 @@ export default function TerritoryModal({ territory, onClose, onSaved }) {
           <div className="grid grid-cols-2 gap-3">
             <Field label="Número" name="number" value={form.number} editing={editing} onChange={handleField} />
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Status</label>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Status</label>
               {editing
-                ? <select name="status" value={form.status} onChange={handleField} className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm">
+                ? <select name="status" value={form.status} onChange={handleField} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-2 py-1.5 text-sm">
                     {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </select>
                 : <StatusBadge status={form.status} />
@@ -117,14 +117,14 @@ export default function TerritoryModal({ territory, onClose, onSaved }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Observações</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Observações</label>
             {editing
-              ? <textarea name="notes" value={form.notes ?? ''} onChange={handleField} rows={3} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              : <p className="text-sm text-gray-700 whitespace-pre-wrap">{form.notes || <span className="text-gray-400 italic">Sem observações</span>}</p>
+              ? <textarea name="notes" value={form.notes ?? ''} onChange={handleField} rows={3} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-400" />
+              : <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{form.notes || <span className="text-gray-400 dark:text-gray-500 italic">Sem observações</span>}</p>
             }
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
         </div>
 
         {/* Footer */}
@@ -132,17 +132,17 @@ export default function TerritoryModal({ territory, onClose, onSaved }) {
           <button
             onClick={handleDownload}
             disabled={!imagePreview}
-            className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-40 border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 disabled:opacity-40 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             ⬇ Baixar cartão
           </button>
           <div className="flex gap-2">
             {editing
               ? <>
-                  <button onClick={() => { setEditing(false); setForm({ ...territory }); setImagePreview(territory.card_image_url); setImageFile(null) }} className="text-sm px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">Cancelar</button>
-                  <button onClick={handleSave} disabled={saving} className="text-sm px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors">{saving ? 'Salvando...' : 'Salvar'}</button>
+                  <button onClick={() => { setEditing(false); setForm({ ...territory }); setImagePreview(territory.card_image_url); setImageFile(null) }} className="text-sm px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Cancelar</button>
+                  <button onClick={handleSave} disabled={saving} className="text-sm px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 disabled:opacity-50 transition-colors">{saving ? 'Salvando...' : 'Salvar'}</button>
                 </>
-              : <button onClick={() => setEditing(true)} className="text-sm px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-700 transition-colors">Editar</button>
+              : <button onClick={() => setEditing(true)} className="text-sm px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-300 transition-colors">Editar</button>
             }
           </div>
         </div>
@@ -154,10 +154,10 @@ export default function TerritoryModal({ territory, onClose, onSaved }) {
 function Field({ label, name, value, editing, onChange, type = 'text' }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-500 mb-1">{label}</label>
+      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{label}</label>
       {editing
-        ? <input type={type} name={name} value={value} onChange={onChange} className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        : <p className="text-sm text-gray-800">{value || <span className="text-gray-400 italic">—</span>}</p>
+        ? <input type={type} name={name} value={value} onChange={onChange} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400" />
+        : <p className="text-sm text-gray-800 dark:text-gray-200">{value || <span className="text-gray-400 dark:text-gray-500 italic">—</span>}</p>
       }
     </div>
   )
