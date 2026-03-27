@@ -5,7 +5,7 @@ import { compressImage } from '../lib/imageUtils'
 import { formatDate, isOverdue, isDueSoon } from '../lib/utils'
 import ImageDropZone from './ImageDropZone'
 
-export default function TerritoryHistoryModal({ territory, onClose, onUpdated, onPendingEdit }) {
+export default function TerritoryHistoryModal({ territory, onClose, onUpdated, onDeleted, onPendingEdit }) {
   const [history, setHistory] = useState([])
   const [loadingHistory, setLoadingHistory] = useState(true)
   const [showAssignForm, setShowAssignForm] = useState(false)
@@ -24,6 +24,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
   const [editAssignedDate, setEditAssignedDate] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   useEffect(() => {
     fetchHistory()
@@ -272,6 +273,22 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
     }
   }
 
+  async function handleDeleteTerritory() {
+    setSaving(true)
+    setError(null)
+    try {
+      await supabase.from('territory_history').delete().eq('territory_id', territory.id)
+      const { error: deleteError } = await supabase.from('territories').delete().eq('id', territory.id)
+      if (deleteError) throw deleteError
+      onDeleted(territory.id)
+    } catch (err) {
+      setError(err.message)
+      setConfirmDelete(false)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <>
     {/* Lightbox */}
@@ -386,7 +403,34 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
             </div>
 
             {/* Edit footer */}
-            <div className="px-4 sm:px-6 pb-safe sm:pb-6 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row gap-2 sm:justify-end shrink-0">
+            <div className="px-4 sm:px-6 pb-safe sm:pb-6 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row gap-2 sm:justify-between shrink-0">
+              {confirmDelete ? (
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Excluir este território?</span>
+                  <button
+                    onClick={handleDeleteTerritory}
+                    disabled={saving}
+                    className="text-xs px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-40 font-medium transition-colors cursor-pointer"
+                  >
+                    {saving ? 'Excluindo...' : 'Confirmar'}
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(false)}
+                    disabled={saving}
+                    className="text-xs px-3 py-1.5 rounded-lg bg-[#f0f0f0] dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 font-medium transition-colors cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  className="w-full sm:w-auto text-sm px-5 py-3 sm:py-2.5 rounded-xl text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium transition-colors cursor-pointer"
+                >
+                  Excluir
+                </button>
+              )}
+              <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
               <button
                 onClick={handleSaveEdit}
                 disabled={saving}
@@ -400,6 +444,7 @@ export default function TerritoryHistoryModal({ territory, onClose, onUpdated, o
               >
                 Cancelar
               </button>
+              </div>
             </div>
           </>
         ) : (

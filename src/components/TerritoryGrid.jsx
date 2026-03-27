@@ -134,6 +134,11 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
     setSelected(updated)
   }
 
+  function handleDeleted(id) {
+    setTerritories(prev => prev.filter(t => t.id !== id))
+    setSelected(null)
+  }
+
   return (
     <div ref={containerRef} className="h-[100dvh] bg-[#f0f0f0] dark:bg-gray-950 flex p-2 sm:p-4 gap-0">
 
@@ -318,6 +323,7 @@ export default function TerritoryGrid({ territories, setTerritories, loading, on
           territory={selected}
           onClose={() => setSelected(null)}
           onUpdated={handleUpdated}
+          onDeleted={handleDeleted}
           onPendingEdit={entry => setPendingEdits(prev => [entry, ...prev])}
         />
       )}
