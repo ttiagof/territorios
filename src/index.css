@@ -20,6 +20,10 @@ html {
   overscroll-behavior: none;
 }
 
+html.dark {
+  color-scheme: dark;
+}
+
 button, a, input, select, textarea {
   touch-action: manipulation;
 }

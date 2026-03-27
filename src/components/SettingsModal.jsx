@@ -58,15 +58,15 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40" onClick={onClose}>
       <div
-        className="bg-white rounded-t-3xl sm:rounded-3xl shadow-xl w-full sm:max-w-sm flex flex-col overflow-hidden max-h-[92dvh] sm:max-h-[90vh]"
+        className="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-xl w-full sm:max-w-sm flex flex-col overflow-hidden max-h-[92dvh] sm:max-h-[90vh]"
         onClick={e => e.stopPropagation()}
       >
         {/* Drag handle — mobile only */}
         <div className="sm:hidden flex justify-center pt-3 pb-0 shrink-0">
-          <div className="w-10 h-1 rounded-full bg-gray-200" />
+          <div className="w-10 h-1 rounded-full bg-gray-200 dark:bg-gray-700" />
         </div>
         {/* Header */}
-        <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100 shrink-0">
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-lg bg-accent-600/10 flex items-center justify-center shrink-0">
               <svg className="w-3.5 h-3.5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -74,11 +74,11 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               </svg>
             </div>
-            <span className="text-sm font-semibold text-gray-900">Definições</span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Definições</span>
           </div>
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors cursor-pointer"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -88,27 +88,27 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
 
         <div className="overflow-y-auto overscroll-contain px-4 sm:px-6 py-4 sm:py-5 space-y-5 sm:space-y-6 pb-safe sm:pb-5">
           {/* Account info */}
-          <div className="flex items-center gap-3 bg-[#f0f0f0] rounded-2xl px-4 py-3">
+          <div className="flex items-center gap-3 bg-[#f0f0f0] dark:bg-gray-800 rounded-2xl px-4 py-3">
             <div className="w-9 h-9 rounded-full bg-accent-600 flex items-center justify-center shrink-0">
               <span className="text-sm font-bold text-white">
                 {(currentName || email).charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="min-w-0">
-              {currentName && <p className="text-sm font-semibold text-gray-900 truncate">{currentName}</p>}
-              <p className="text-xs text-gray-400 truncate">{email}</p>
+              {currentName && <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{currentName}</p>}
+              <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{email}</p>
             </div>
           </div>
 
           {/* Change name */}
           <form onSubmit={handleSaveName} className="space-y-3">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Nome de utilizador</p>
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Nome de utilizador</p>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="O teu nome"
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
             />
             {nameMsg && (
               <p className={`text-xs ${nameMsg.type === 'ok' ? 'text-emerald-500' : 'text-red-500'}`}>{nameMsg.text}</p>
@@ -122,18 +122,18 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
             </button>
           </form>
 
-          <div className="border-t border-gray-100" />
+          <div className="border-t border-gray-100 dark:border-gray-800" />
 
           {/* Change password */}
           <form onSubmit={handleSavePassword} className="space-y-3">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Alterar password</p>
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Alterar password</p>
             <input
               type="password"
               value={currentPassword}
               onChange={e => setCurrentPassword(e.target.value)}
               placeholder="Password atual"
               required
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
             />
             <input
               type="password"
@@ -141,7 +141,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
               onChange={e => setNewPassword(e.target.value)}
               placeholder="Nova password"
               required
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
             />
             <input
               type="password"
@@ -149,7 +149,7 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
               onChange={e => setConfirmPassword(e.target.value)}
               placeholder="Confirmar nova password"
               required
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400"
             />
             {passwordMsg && (
               <p className={`text-xs ${passwordMsg.type === 'ok' ? 'text-emerald-500' : 'text-red-500'}`}>{passwordMsg.text}</p>
@@ -163,12 +163,12 @@ export default function SettingsModal({ user, onClose, onSignOut }) {
             </button>
           </form>
 
-          <div className="border-t border-gray-100" />
+          <div className="border-t border-gray-100 dark:border-gray-800" />
 
           {/* Sign out */}
           <button
             onClick={onSignOut}
-            className="w-full py-2 rounded-xl bg-[#f0f0f0] hover:bg-red-50 text-red-500 hover:text-red-600 text-sm font-semibold transition-colors cursor-pointer"
+            className="w-full py-2 rounded-xl bg-[#f0f0f0] dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 hover:text-red-600 text-sm font-semibold transition-colors cursor-pointer"
           >
             Terminar sessão
           </button>

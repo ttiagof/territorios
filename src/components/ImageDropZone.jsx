@@ -14,7 +14,7 @@ export default function ImageDropZone({ preview, onFile, onClear }) {
   return (
     <div
       className={`relative rounded-xl cursor-pointer overflow-hidden transition-colors ${
-        dragActive ? 'bg-gray-200' : 'bg-[#f0f0f0] hover:bg-gray-200'
+        dragActive ? 'bg-gray-200 dark:bg-gray-700' : 'bg-[#f0f0f0] dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
       }`}
       style={{ minHeight: '7rem' }}
       onDragOver={e => { e.preventDefault(); setDragActive(true) }}

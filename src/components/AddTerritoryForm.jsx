@@ -69,18 +69,18 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-t-3xl sm:rounded-3xl shadow-xl w-full sm:max-w-md max-h-[92dvh] sm:max-h-[90vh] overflow-y-auto overscroll-contain flex flex-col"
+        className="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl shadow-xl w-full sm:max-w-md max-h-[92dvh] sm:max-h-[90vh] overflow-y-auto overscroll-contain flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         {/* Drag handle — mobile only */}
         <div className="sm:hidden flex justify-center pt-3 pb-0 shrink-0">
-          <div className="w-10 h-1 rounded-full bg-gray-200" />
+          <div className="w-10 h-1 rounded-full bg-gray-200 dark:bg-gray-700" />
         </div>
-        <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100 shrink-0">
-          <h2 className="text-base font-semibold text-gray-900">Novo território</h2>
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Novo território</h2>
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-[#f0f0f0] dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors cursor-pointer"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -95,7 +95,7 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Imagem da frente</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Imagem da frente</label>
             <ImageDropZone
               preview={frontPreview}
               onFile={file => { setFrontImageFile(file); setFrontPreview(URL.createObjectURL(file)) }}
@@ -104,7 +104,7 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Imagem do verso</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Imagem do verso</label>
             <ImageDropZone
               preview={backPreview}
               onFile={file => { setBackImageFile(file); setBackPreview(URL.createObjectURL(file)) }}
@@ -113,13 +113,13 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Observações</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Observações</label>
             <textarea
               name="notes"
               value={form.notes}
               onChange={handleField}
               rows={3}
-              className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-accent-400 transition"
+              className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 resize-none focus:outline-none focus:ring-2 focus:ring-accent-400 transition"
             />
           </div>
 
@@ -136,7 +136,7 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto text-sm px-4 py-3 sm:py-2.5 rounded-xl bg-[#f0f0f0] text-gray-600 hover:bg-gray-200 font-medium transition-colors cursor-pointer"
+              className="w-full sm:w-auto text-sm px-4 py-3 sm:py-2.5 rounded-xl bg-[#f0f0f0] dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 font-medium transition-colors cursor-pointer"
             >
               Cancelar
             </button>
@@ -150,14 +150,14 @@ export default function AddTerritoryForm({ onClose, onAdded }) {
 function FormField({ label, name, value, onChange, type = 'text', placeholder = '' }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-500 mb-1.5">{label}</label>
+      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
       <input
         type={type}
         name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full bg-[#f0f0f0] rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400 transition"
+        className="w-full bg-[#f0f0f0] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2.5 text-sm border-0 focus:outline-none focus:ring-2 focus:ring-accent-400 transition"
       />
     </div>
   )
