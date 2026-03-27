@@ -1,7 +1,7 @@
-const CACHE_NAME = 'territorios-v1'
+const CACHE_NAME = 'territorios-v2'
 const PRECACHE_URLS = [
-  '/territorios/',
-  '/territorios/index.html',
+  '/',
+  '/index.html',
 ]
 
 self.addEventListener('install', (event) => {

@@ -5,8 +5,8 @@
   "theme_color": "#5b8ec9",
   "background_color": "#ffffff",
   "display": "standalone",
-  "scope": "/territorios/",
-  "start_url": "/territorios/",
+  "scope": "/",
+  "start_url": "/",
   "icons": [
     {
       "src": "pwa-192x192.png",
