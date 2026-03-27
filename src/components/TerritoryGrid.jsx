@@ -376,7 +376,7 @@ function TerritoryCard({ territory, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col rounded-2xl bg-[#f0f0f0] dark:bg-gray-800 hover:bg-[#e8e8e8] dark:hover:bg-gray-750 hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] dark:focus:ring-offset-gray-950 cursor-pointer p-2 pb-0"
+      className="group flex flex-col rounded-2xl bg-[#f0f0f0] dark:bg-gray-800 hover:bg-[#e8e8e8] dark:hover:bg-gray-700 hover:scale-[1.02] transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-[#f0f0f0] dark:focus:ring-offset-gray-950 cursor-pointer p-2 pb-0"
     >
       {/* Image area — inset with own rounded corners */}
       <div className={`w-full aspect-[4/3] overflow-hidden relative rounded-xl ${
@@ -401,7 +401,7 @@ function TerritoryCard({ territory, onClick }) {
           </div>
         )}
         {/* Status indicator dot */}
-        <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ring-2 ring-white dark:ring-gray-800 ${
+        <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ring-2 ring-[#d8d8d8] dark:ring-gray-700 ${
           isAvailable ? 'bg-emerald-500' :
           overdue     ? 'bg-red-500'     :
           dueSoon     ? 'bg-amber-400'   :
