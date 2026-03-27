@@ -377,7 +377,7 @@ function TerritoryCard({ territory, onClick }) {
         territory.card_front_image_url
           ? 'bg-[#d8d8d8] dark:bg-gray-700'
           : isAvailable
-            ? 'bg-gradient-to-br from-[#ddeaf7] to-[#c8d9ec] dark:from-blue-900/40 dark:to-blue-800/30'
+            ? 'bg-gradient-to-br from-[#ddeaf7] to-[#c8d9ec] dark:from-gray-700 dark:to-gray-600/80'
             : 'bg-gradient-to-br from-[#e8e8e8] to-[#d4d4d4] dark:from-gray-700 dark:to-gray-600'
       }`}>
         {territory.card_front_image_url ? (
